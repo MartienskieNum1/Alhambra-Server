@@ -1,5 +1,6 @@
 package be.howest.ti.alhambra.webapi;
 
+import be.howest.ti.alhambra.logic.AlhambraController;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -8,7 +9,11 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
+    private final AlhambraController controller;
 
+    public DefaultAlhambraOpenAPI3Bridge() {
+        this.controller = new AlhambraController();
+    }
 
     public boolean verifyAdminToken(String token) {
         LOGGER.info("verifyPlayerToken");
@@ -37,7 +42,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getCurrencies(RoutingContext ctx) {
         LOGGER.info("getCurrencies");
-        return null;
+        return controller.getCurrencies();
     }
 
     public Object getScoringTable(RoutingContext ctx) {
