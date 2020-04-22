@@ -5,4 +5,9 @@ public class AlhambraController {
     public Currency[] getCurrencies() {
         return Currency.values();
     }
+
+    public BuildingType[] getBuildingTypes() {
+        return BuildingType.values();
+    }
+
 }
