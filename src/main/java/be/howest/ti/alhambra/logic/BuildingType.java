@@ -10,4 +10,5 @@ public enum BuildingType {
     public String toString() {
         return super.toString().toLowerCase();
     }
+
 }
