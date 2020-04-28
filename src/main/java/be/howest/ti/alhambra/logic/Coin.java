@@ -29,8 +29,7 @@ public class Coin {
         return currency;
     }
 
-    @JsonProperty("amount")
-    int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
