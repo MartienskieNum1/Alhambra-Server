@@ -1,6 +1,7 @@
 package be.howest.ti.alhambra.logic;
 
 import java.util.List;
+import java.util.Map;
 
 public class Game {
 
@@ -12,8 +13,8 @@ public class Game {
     private int playerCount;
     private int readyCount;
     private Player currentPlayer;
-    private List<Building> market;
-    private List<Coin> bank;
+    private Map<Currency, Building> market;
+    private Map<Currency, Coin> bank;
 
 
 
