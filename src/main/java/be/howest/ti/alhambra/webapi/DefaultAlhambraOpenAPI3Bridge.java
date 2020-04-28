@@ -51,11 +51,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        LOGGER.info("getGames");
+        String id = "group-000";
+        Player[] players = ;
         return null;
     }
-
-
 
     public Object createGame(RoutingContext ctx) {
         LOGGER.info("createGame");
