@@ -2,6 +2,7 @@ package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.AlhambraController;
 import be.howest.ti.alhambra.logic.Coin;
+import be.howest.ti.alhambra.logic.exceptions.Player;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -54,14 +55,16 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        String id = "group-000";
-        Player[] players = ;
+        LOGGER.info("getGames");
         return null;
     }
 
+
     public Object createGame(RoutingContext ctx) {
-        LOGGER.info("createGame");
-        return null;
+        String groupNr = "group27";
+        String gameId = "000";
+
+        return groupNr + "-" + gameId;
     }
 
     public Object clearGames(RoutingContext ctx) {
@@ -129,6 +132,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object getGame(RoutingContext ctx) {
         LOGGER.info("getGame");
         return null;
+        }
     }
 
-}
