@@ -37,7 +37,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getBuildingTypes(RoutingContext ctx) {
         LOGGER.info("getBuildingTypes");
-        return null;
+        return controller.getBuildingTypes();
     }
 
     public Object getCurrencies(RoutingContext ctx) {
