@@ -14,9 +14,21 @@ public class Building {
 
 
     @JsonCreator
-    public Building(@JsonProperty("buildingType") BuildingType buildingType,@JsonProperty("cost") int cost) {
+    public Building(@JsonProperty("buildingType") BuildingType buildingType, @JsonProperty("cost") int cost) {
         this.buildingType = buildingType;
         this.cost = cost;
+    }
+
+    public BuildingType getBuildingType() {
+        return buildingType;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public Map<Wall, Boolean> getWalls() {
+        return walls;
     }
 
     @Override
