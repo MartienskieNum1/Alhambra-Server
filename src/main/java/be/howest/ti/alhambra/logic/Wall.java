@@ -19,5 +19,46 @@ public class Wall {
         this.west = west;
     }
 
+    public boolean isNorth() {
+        return north;
+    }
+
+    public boolean isEast() {
+        return east;
+    }
+
+    public boolean isSouth() {
+        return south;
+    }
+
+    public boolean isWest() {
+        return west;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wall wall = (Wall) o;
+        return north == wall.north &&
+                east == wall.east &&
+                south == wall.south &&
+                west == wall.west;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(north, east, south, west);
+    }
+
+    @Override
+    public String toString() {
+        return "Wall{" +
+                "north=" + north +
+                ", east=" + east +
+                ", south=" + south +
+                ", west=" + west +
+                '}';
+    }
 
 }
