@@ -1,6 +1,7 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.AlhambraController;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -89,8 +90,15 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object takeMoney(RoutingContext ctx) {
-        LOGGER.info("takeMoney");
-        return null;
+
+        String gameId = ctx.request().getParam("gameId");
+        String playerName = ctx.request().getParam("playerName");
+        
+
+        return new JsonObject()
+                .put("gameId", gameId)
+                .put("playerName", playerName)
+                .put("totalAmount", totalAmount);
     }
 
     public Object buyBuilding(RoutingContext ctx) {
