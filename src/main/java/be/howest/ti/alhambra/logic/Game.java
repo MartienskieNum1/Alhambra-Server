@@ -29,6 +29,10 @@ public class Game {
         this.currentPlayer = players.get(0);
     }
 
+    public void addPlayer(Player playerToAdd){ players.add(playerToAdd); }
+
+    public String getGameInfo(){ return groupNr + gameId; }
+
     public int getGameId() {
         return gameId;
     }
