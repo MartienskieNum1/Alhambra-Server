@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Alhambra {
-    private List<Game> games = new LinkedList<>();
+    private static List<Game> games = new LinkedList<>();
     private static final String GROUPNR = "group27";
-    private int gameId = 0;
+    private static int gameId = 0;
 
-    public Game addGame(){
+    public static Game addGame(){
         Game newlyMadeGame = new Game(GROUPNR, gameId, new LinkedList<>());
            games.add(newlyMadeGame);
            gameId += 1;
@@ -19,7 +19,7 @@ public class Alhambra {
         games.removeIf(game -> game.getGameId() == gameToRemove.getGameId());
     }
 
-    public List<Game> getGames() {
+    public static List<Game> getGames() {
         return games;
     }
 
