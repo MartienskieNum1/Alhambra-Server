@@ -10,13 +10,16 @@ import java.util.Objects;
 public class Building {
     private final BuildingType buildingType;
     private final int cost;
-    private final Map<Wall, Boolean> walls = new HashMap<>();
-
+    private Map<String, Boolean> walls = new HashMap<>();
 
     @JsonCreator
-    public Building(@JsonProperty("buildingType") BuildingType buildingType, @JsonProperty("cost") int cost) {
+    public Building(@JsonProperty("buildingType") BuildingType buildingType, @JsonProperty("cost") int cost, boolean north, boolean east, boolean south, boolean west) {
         this.buildingType = buildingType;
         this.cost = cost;
+        this.walls.put("north", north);
+        this.walls.put("east", east);
+        this.walls.put("south", south);
+        this.walls.put("west", west);
     }
 
     public BuildingType getBuildingType() {
@@ -27,7 +30,7 @@ public class Building {
         return cost;
     }
 
-    public Map<Wall, Boolean> getWalls() {
+    public Map<String, Boolean> getWalls() {
         return walls;
     }
 
