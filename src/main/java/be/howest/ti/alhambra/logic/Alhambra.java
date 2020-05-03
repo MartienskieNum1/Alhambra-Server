@@ -4,20 +4,29 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Alhambra {
-    public static List<Game> games = new LinkedList<>();
-    private static final String groupNr = "group27";
-    private static int gameId = 000;
+    private List<Game> games = new LinkedList<>();
+    private static final String GROUPNR = "group27";
+    private int gameId = 0;
 
-    public static void addGame(){
-           games.add(new Game(groupNr, gameId, new LinkedList<>()));
+    public void addGame(){
+           games.add(new Game(GROUPNR, gameId, new LinkedList<>()));
            gameId += 1;
     }
 
-    public static void removeGame(Game gameToRemove){
+    public void removeGame(Game gameToRemove){
         games.removeIf(game -> game.getGameId() == gameToRemove.getGameId());
     }
 
-    public static List<Game> getGames() {
+    public List<Game> getGames() {
         return games;
+    }
+
+    public Game find(String gameId) {
+        for (Game game : games) {
+            if (game.getGameInfo().equals(gameId)) {
+                return game;
+            }
+        }
+        return null;
     }
 }
