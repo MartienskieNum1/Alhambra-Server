@@ -1,9 +1,6 @@
 package be.howest.ti.alhambra.webapi;
 
-import be.howest.ti.alhambra.logic.Alhambra;
-import be.howest.ti.alhambra.logic.AlhambraController;
-import be.howest.ti.alhambra.logic.Coin;
-import be.howest.ti.alhambra.logic.Game;
+import be.howest.ti.alhambra.logic.*;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -72,9 +69,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object createGame(RoutingContext ctx) {
         Game newGame = Alhambra.addGame();
 
-        String gameInfo = newGame.getGameInfo();
-
-        return gameInfo;
+        return newGame.getGameInfo();
     }
 
     public Object clearGames(RoutingContext ctx) {
@@ -84,7 +79,11 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object joinGame(RoutingContext ctx) {
         LOGGER.info("joinGame");
-        return null;
+        String gameId = ctx.request().getParam("gameId");
+
+        String body = ctx.getBodyAsString();
+
+        return controller.returnPlayerToken(gameId, body);
     }
 
 
@@ -104,7 +103,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object takeMoney(RoutingContext ctx) {
-
+        LOGGER.info("takeMoney");
         String gameId = ctx.request().getParam("gameId");
         String playerName = ctx.request().getParam("playerName");
 
