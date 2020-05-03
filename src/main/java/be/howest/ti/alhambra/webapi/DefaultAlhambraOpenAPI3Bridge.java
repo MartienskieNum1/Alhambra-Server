@@ -1,12 +1,17 @@
 package be.howest.ti.alhambra.webapi;
 
+import be.howest.ti.alhambra.logic.Alhambra;
 import be.howest.ti.alhambra.logic.AlhambraController;
 import be.howest.ti.alhambra.logic.Coin;
+import be.howest.ti.alhambra.logic.Game;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
@@ -54,15 +59,22 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        LOGGER.info("getGames");
-        return null;
+        List<Game>listOfGames = Alhambra.getGames();
+        List<String>listOfGamesInfo = new LinkedList<>();
+
+        for (Game game: listOfGames){
+            listOfGamesInfo.add(game.getGameInfo());
+        }
+
+        return listOfGamesInfo;
     }
 
-
-
     public Object createGame(RoutingContext ctx) {
-        LOGGER.info("createGame");
-        return null;
+        Game newGame = Alhambra.addGame();
+
+        String gameInfo = newGame.getGameInfo();
+
+        return gameInfo;
     }
 
     public Object clearGames(RoutingContext ctx) {

@@ -8,9 +8,11 @@ public class Alhambra {
     private static final String GROUPNR = "group27";
     private int gameId = 0;
 
-    public void addGame(){
-           games.add(new Game(GROUPNR, gameId, new LinkedList<>()));
+    public Game addGame(){
+        Game newlyMadeGame = new Game(GROUPNR, gameId, new LinkedList<>());
+           games.add(newlyMadeGame);
            gameId += 1;
+           return newlyMadeGame;
     }
 
     public void removeGame(Game gameToRemove){
@@ -21,7 +23,7 @@ public class Alhambra {
         return games;
     }
 
-    public Game find(String gameId) {
+    public Game findGame(String gameId) {
         for (Game game : games) {
             if (game.getGameInfo().equals(gameId)) {
                 return game;
