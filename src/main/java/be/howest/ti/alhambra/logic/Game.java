@@ -26,12 +26,11 @@ public class Game {
         this.started = false;
         this.ended = false;
         this.playerCount = players.size();
-        this.currentPlayer = players.get(0);
     }
 
     public void addPlayer(Player playerToAdd){ players.add(playerToAdd); }
 
-    public String getGameInfo(){ return groupNr + gameId; }
+    public String getGameInfo(){ return groupNr + "-" + gameId; }
 
     public int getGameId() {
         return gameId;
