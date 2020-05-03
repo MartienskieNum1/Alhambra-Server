@@ -23,7 +23,7 @@ public class Alhambra {
         return games;
     }
 
-    public Game findGame(String gameId) {
+    public static Game findGame(String gameId) {
         for (Game game : games) {
             if (game.getGameInfo().equals(gameId)) {
                 return game;
