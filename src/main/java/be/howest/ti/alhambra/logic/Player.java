@@ -1,11 +1,13 @@
 package be.howest.ti.alhambra.logic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@JsonIgnoreProperties(value = {"coins", "reserve", "buildingsInHand","city"})
 public class Player {
 
     private final String username;
