@@ -21,7 +21,6 @@ public class Alhambra {
             gameId = "0" + gameIdCounter;
         }
 
-
         Game newlyMadeGame = new Game(groupNr, gameId, new LinkedList<>());
         games.add(newlyMadeGame);
         gameIdCounter += 1;
@@ -35,7 +34,7 @@ public class Alhambra {
     public static Game findGame(String gameToFind){
         Game matchingGame = null;
         for (Game game : games){
-            if (game.getGameId()==gameToFind.getGameId()){
+            if (game.getGameId().equals(gameToFind.getGameId())){
                 matchingGame = game;
             }
         }
