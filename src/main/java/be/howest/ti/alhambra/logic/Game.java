@@ -6,7 +6,7 @@ import java.util.Map;
 public class Game {
 
     private final String groupNr;
-    private final int gameId;
+    private final String gameId;
     private List<Player> players;
     private Boolean started;
     private Boolean ended;
@@ -18,7 +18,7 @@ public class Game {
 
 
 
-    public Game(String groupNr, int gameId, List<Player> players) {
+    public Game(String groupNr, String gameId, List<Player> players) {
         this.groupNr = groupNr;
         this.gameId = gameId;
         this.players = players;
@@ -35,7 +35,7 @@ public class Game {
 
     public String getGameInfo(){ return groupNr + "-" + gameId; }
 
-    public int getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
