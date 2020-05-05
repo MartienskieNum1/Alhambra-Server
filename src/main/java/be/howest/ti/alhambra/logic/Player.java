@@ -1,6 +1,7 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.codegen.doc.Tag;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +16,8 @@ public class Player {
     private List<Building> buildingsInHand;
     private List<Building> city;
 
-
-    public Player(String username) {
+    @JsonCreator
+    public Player(@JsonProperty("playerName") String username) {
         this.username = username;
         this.score = 0;
         this.virtualScore = 0;

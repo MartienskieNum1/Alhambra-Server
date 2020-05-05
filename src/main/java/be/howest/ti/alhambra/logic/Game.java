@@ -28,7 +28,10 @@ public class Game {
         this.playerCount = players.size();
     }
 
-    public void addPlayer(Player playerToAdd){ players.add(playerToAdd); }
+    public void addPlayer(Player playerToAdd){
+        players.add(playerToAdd);
+        playerCount++;
+    }
 
     public String getGameInfo(){ return groupNr + "-" + gameId; }
 

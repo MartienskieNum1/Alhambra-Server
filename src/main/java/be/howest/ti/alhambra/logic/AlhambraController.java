@@ -1,5 +1,7 @@
 package be.howest.ti.alhambra.logic;
 
+import io.vertx.core.json.JsonObject;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,18 @@ public class AlhambraController {
         buildings.add(new Building(BuildingType.SERAGLIO, 9, false, false, false, false));
 
         return this.buildings;
+    }
+
+    public String returnPlayerToken(String gameId, String body) {
+        JsonObject json = new JsonObject(body);
+        String username = json.getString("playerName");
+
+        Game game = Alhambra.findGame(gameId);
+        if (game != null) {
+            game.addPlayer(new Player(username));
+            return game.getGameInfo() + "+" + username;
+        }
+        return null;
     }
 
 }
