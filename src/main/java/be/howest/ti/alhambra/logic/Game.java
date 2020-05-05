@@ -1,12 +1,12 @@
 package be.howest.ti.alhambra.logic;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class Game {
 
-    private final String groupNr;
-    private final int gameId;
+    private final String gameId;
     private List<Player> players;
     private Boolean started;
     private Boolean ended;
@@ -18,14 +18,14 @@ public class Game {
 
 
 
-    public Game(String groupNr, int gameId, List<Player> players) {
-        this.groupNr = groupNr;
+    public Game(String gameId) {
+
         this.gameId = gameId;
-        this.players = players;
+        this.players = new LinkedList<>();
         this.readyCount = 0;
         this.started = false;
         this.ended = false;
-        this.playerCount = players.size();
+        this.playerCount = 0;
     }
 
     public void addPlayer(Player playerToAdd){
@@ -33,9 +33,7 @@ public class Game {
         playerCount++;
     }
 
-    public String getGameInfo(){ return groupNr + "-" + gameId; }
-
-    public int getGameId() {
+    public String getGameId() {
         return gameId;
     }
 

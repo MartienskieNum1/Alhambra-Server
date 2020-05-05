@@ -60,7 +60,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         List<String>listOfGamesInfo = new LinkedList<>();
 
         for (Game game: listOfGames){
-            listOfGamesInfo.add(game.getGameInfo());
+            listOfGamesInfo.add(game.getGameId());
         }
 
         return listOfGamesInfo;
@@ -69,7 +69,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object createGame(RoutingContext ctx) {
         Game newGame = Alhambra.addGame();
 
-        return newGame.getGameInfo();
+        return newGame.getGameId();
     }
 
     public Object clearGames(RoutingContext ctx) {
