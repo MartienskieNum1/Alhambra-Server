@@ -42,7 +42,7 @@ public class AlhambraController {
         Game game = Alhambra.findGame(gameId);
         if (game != null) {
             game.addPlayer(new Player(username));
-            return game.getGameInfo() + "+" + username;
+            return game.getGameId() + "+" + username;
         }
         return null;
     }

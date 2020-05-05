@@ -13,15 +13,15 @@ public class Alhambra {
 
 
     public static Game addGame(){
-         gameId = String.valueOf(gameIdCounter);
+         gameId = groupNr + "-" + String.valueOf(gameIdCounter);
         if (gameIdCounter < 10){
-            gameId = "00" + gameIdCounter;
+            gameId = groupNr + "-" + "00" + gameIdCounter;
         }
         else if (gameIdCounter < 100){
-            gameId = "0" + gameIdCounter;
+            gameId = groupNr + "-" + "0" + gameIdCounter;
         }
 
-        Game newlyMadeGame = new Game(groupNr, gameId, new LinkedList<>());
+        Game newlyMadeGame = new Game(gameId);
         games.add(newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
@@ -34,7 +34,7 @@ public class Alhambra {
     public static Game findGame(String gameToFind){
         Game matchingGame = null;
         for (Game game : games){
-            if (game.getGameId().equals(gameToFind.getGameId())){
+            if (game.getGameId().equals(gameToFind)){
                 matchingGame = game;
             }
         }
