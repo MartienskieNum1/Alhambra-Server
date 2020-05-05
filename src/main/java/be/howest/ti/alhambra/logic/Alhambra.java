@@ -9,20 +9,20 @@ public class Alhambra {
     public static List<Game> games = new LinkedList<>();
     private static final String groupNr = "group27";
     private static int gameIdCounter = 0;
-    private static String gameIdString = "";
+    private static String gameId = "";
 
 
     public static Game addGame(){
-         gameIdString = String.valueOf(gameIdCounter);
+         gameId = String.valueOf(gameIdCounter);
         if (gameIdCounter < 10){
-            gameIdString = "00" + gameIdCounter;
+            gameId = "00" + gameIdCounter;
         }
         else if (gameIdCounter < 100){
-            gameIdString = "0" + gameIdCounter;
+            gameId = "0" + gameIdCounter;
         }
 
 
-        Game newlyMadeGame = new Game(groupNr, gameIdString, new LinkedList<>());
+        Game newlyMadeGame = new Game(groupNr, gameId, new LinkedList<>());
         games.add(newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
@@ -32,7 +32,7 @@ public class Alhambra {
         games.removeIf(game -> game.getGameId() == gameToRemove.getGameId());
     }
 
-    public static Game findGame(Game gameToFind){
+    public static Game findGame(String gameToFind){
         Game matchingGame = null;
         for (Game game : games){
             if (game.getGameId()==gameToFind.getGameId()){
