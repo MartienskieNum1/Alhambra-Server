@@ -1,6 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.Json;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,13 +36,12 @@ public class AlhambraController {
     }
 
     public String returnPlayerToken(String gameId, String body) {
-        JsonObject json = new JsonObject(body);
-        String username = json.getString("playerName");
+        Player player = Json.decodeValue(body, Player.class);
 
         Game game = Alhambra.findGame(gameId);
         if (game != null) {
-            game.addPlayer(new Player(username));
-            return game.getGameId() + "+" + username;
+            game.addPlayer(player);
+            return game.getGameId() + "+" + player.getUsername();
         }
         return null;
     }
