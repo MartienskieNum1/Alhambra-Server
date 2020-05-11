@@ -7,16 +7,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.HttpHead;
-
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
     private final AlhambraController controller;
@@ -124,8 +119,11 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String name = ctx.request().getParam("name");
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
-
-        return null;
+        if (verifyPlayerToken(token,gameId,name)){
+            game.getPlayers().remove(token);
+            return null;
+        }
+        return -1;
     }
 
     public Object setReady(RoutingContext ctx) {
