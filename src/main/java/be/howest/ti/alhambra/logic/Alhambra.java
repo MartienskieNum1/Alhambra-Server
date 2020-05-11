@@ -21,7 +21,7 @@ public class Alhambra {
             gameId = groupNr + "-" + "0" + gameIdCounter;
         }
 
-        Game newlyMadeGame = new Game(gameId);
+        Game newlyMadeGame = new Game(gameId, groupNr);
         games.add(newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
