@@ -65,5 +65,15 @@ public class Game {
     public String getGroupNr() {
         return groupNr;
     }
+
+    public void setReady(String token){
+        players.get(token).setReady();
+        readyCount++;
+    }
+
+    public void setNotReady(String token){
+        players.get(token).setNotReady();
+        readyCount--;
+    }
 }
 
