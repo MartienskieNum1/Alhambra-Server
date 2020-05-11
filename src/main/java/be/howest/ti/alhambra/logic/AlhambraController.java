@@ -47,7 +47,7 @@ public class AlhambraController {
     }
 
     public String setReady(String id, String playerName) {
-        Game game = Alhambra.findGame(id);
+
         
         return null;
     }
