@@ -35,6 +35,11 @@ public class Game {
         playerCount++;
     }
 
+    public void deletePlayer(Player playerToDelete){
+
+        playerCount--;
+    }
+
     public String getGameId() {
         return gameId;
     }
