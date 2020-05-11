@@ -73,7 +73,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
                 if (game.getGroupNr().equals(prefix)){
                     listOfGamesDetailed.add(new JsonObject()
                             .put("gameId",game.getGameId())
-                            .put("players", game.getPlayers())
+                            .put("players", game.getPlayersList())
                             .put("started", game.getStarted())
                             .put("ended", game.getEnded())
                             .put("playerCount", game.getPlayerCount())

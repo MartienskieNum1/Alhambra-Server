@@ -44,6 +44,10 @@ public class Game {
         return players;
     }
 
+    public List<Player> getPlayersList() {
+        return new LinkedList<>(players.values());
+    }
+
     public Boolean getStarted() {
         return started;
     }
