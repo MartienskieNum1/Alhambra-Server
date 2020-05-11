@@ -1,6 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-import org.apache.commons.lang3.builder.StandardToStringStyle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,7 @@ public class Alhambra {
 
 
     public Game addGame(){
-         gameId = groupNr + "-" + String.valueOf(gameIdCounter);
+         gameId = groupNr + "-" + gameIdCounter;
         if (gameIdCounter < 10){
             gameId = groupNr + "-" + "00" + gameIdCounter;
         }
