@@ -173,7 +173,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getGame(RoutingContext ctx) {
         String gameId = ctx.request().getParam("gameId");
-        Game gameToFind = Alhambra.findGame(gameId);
+        Game gameToFind = alhambra.findGame(gameId);
 
 
         return new JsonObject()
