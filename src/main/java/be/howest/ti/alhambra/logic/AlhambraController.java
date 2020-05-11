@@ -35,10 +35,8 @@ public class AlhambraController {
         return this.buildings;
     }
 
-    public String returnPlayerToken(String gameId, String body) {
+    public String returnPlayerToken(Game game, String body) {
         Player player = Json.decodeValue(body, Player.class);
-
-        Game game = Alhambra.findGame(gameId);
         if (game != null) {
             game.addPlayer(player);
             return game.getGameId() + "+" + player.getUsername();
