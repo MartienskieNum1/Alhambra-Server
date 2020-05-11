@@ -8,6 +8,7 @@ import java.util.Map;
 public class Game {
 
     private final String gameId;
+    private String groupNr;
     private Map<String, Player> players;
     private Boolean started;
     private Boolean ended;
@@ -19,9 +20,10 @@ public class Game {
 
 
 
-    public Game(String gameId) {
+    public Game(String gameId, String groupNr) {
 
         this.gameId = gameId;
+        this.groupNr = groupNr;
         this.players = new HashMap<>();
         this.readyCount = 0;
         this.started = false;
@@ -46,11 +48,17 @@ public class Game {
         return started;
     }
 
+    public Boolean getEnded() { return ended; }
+
     public int getPlayerCount() {
         return playerCount;
     }
 
     public int getReadyCount() {
         return readyCount;
+    }
+
+    public String getGroupNr() {
+        return groupNr;
     }
 }

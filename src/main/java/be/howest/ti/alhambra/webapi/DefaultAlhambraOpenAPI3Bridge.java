@@ -8,16 +8,20 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
     private final AlhambraController controller;
+    private final Alhambra alhambra;
 
     public DefaultAlhambraOpenAPI3Bridge() {
+        this.alhambra = new Alhambra();
         this.controller = new AlhambraController();
     }
 
@@ -58,18 +62,41 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        List<Game>listOfGames = Alhambra.getGames();
+        List<Game>listOfGames = alhambra.getGames();
         List<String>listOfGamesInfo = new LinkedList<>();
+        List<JsonObject>listOfGamesDetailed = new LinkedList<>();
+        String prefix = ctx.request().getParam("prefix");
+        String details = ctx.request().getParam("details");
 
-        for (Game game: listOfGames){
-            listOfGamesInfo.add(game.getGameId());
+        if (Boolean.parseBoolean(details)) {
+            for (Game game : listOfGames){
+                if (game.getGroupNr().equals(prefix)){
+                    listOfGamesDetailed.add(new JsonObject()
+                            .put("gameId",game.getGameId())
+                            .put("players", game.getPlayers())
+                            .put("started", game.getStarted())
+                            .put("ended", game.getEnded())
+                            .put("playerCount", game.getPlayerCount())
+                            .put("readyCount", game.getReadyCount())
+                    );
+                }
+
+            }
+            return listOfGamesDetailed;
+
+        } else {
+            for (Game game : listOfGames){
+                if (game.getGroupNr().equals(prefix)){
+                    listOfGamesInfo.add(game.getGameId());
+                }
+            }
         }
 
         return listOfGamesInfo;
     }
 
     public Object createGame(RoutingContext ctx) {
-        Game newGame = Alhambra.addGame();
+        Game newGame = alhambra.addGame();
 
         return newGame.getGameId();
     }
@@ -84,8 +111,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam("gameId");
 
         String body = ctx.getBodyAsString();
-
-        return controller.returnPlayerToken(gameId, body);
+        Game game = alhambra.findGame(gameId);
+        return controller.returnPlayerToken(game, body);
     }
 
 
@@ -144,7 +171,16 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         LOGGER.info("getGame");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         String gameId = ctx.request().getParam("gameId");
-        return null;
+        Game gameToFind = alhambra.findGame(gameId);
+
+
+        return new JsonObject()
+                .put("gameId",gameToFind.getGameId())
+                .put("players", gameToFind.getPlayers())
+                .put("started", gameToFind.getStarted())
+                .put("ended", gameToFind.getEnded())
+                .put("playerCount", gameToFind.getPlayerCount())
+                .put("readyCount", gameToFind.getReadyCount());
     }
 
 }
