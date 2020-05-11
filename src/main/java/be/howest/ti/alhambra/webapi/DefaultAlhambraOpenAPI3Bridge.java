@@ -97,9 +97,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String playerName = ctx.request().getParam("playerName");
 
-        String body = ctx.getBodyAsString();
-
-        return controller.setReady(id, playerName, body);
+        return controller.setReady(id, playerName);
 
     }
 

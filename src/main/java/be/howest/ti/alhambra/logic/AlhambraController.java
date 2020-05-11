@@ -46,10 +46,9 @@ public class AlhambraController {
         return null;
     }
 
-    public Boolean setReady(String id, String playerName, String body) {
-
-
-
-        return true;
+    public String setReady(String id, String playerName) {
+        Game game = Alhambra.findGame(id);
+        
+        return null;
     }
 }
