@@ -46,7 +46,9 @@ public class AlhambraController {
         return null;
     }
 
-    public Boolean setReady() {
+    public Boolean setReady(String id, String playerName, String body) {
+
+
 
         return true;
     }

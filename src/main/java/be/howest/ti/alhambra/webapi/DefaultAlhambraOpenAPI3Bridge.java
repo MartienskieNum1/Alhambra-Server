@@ -99,7 +99,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
         String body = ctx.getBodyAsString();
 
-        return controller.setReady();
+        return controller.setReady(id, playerName, body);
 
     }
 
