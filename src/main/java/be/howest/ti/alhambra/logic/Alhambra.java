@@ -1,19 +1,18 @@
 package be.howest.ti.alhambra.logic;
 
-import org.apache.commons.lang3.builder.StandardToStringStyle;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Alhambra {
-    public static List<Game> games = new LinkedList<>();
-    private static final String groupNr = "group27";
-    private static int gameIdCounter = 0;
-    private static String gameId = "";
+    public List<Game> games = new LinkedList<>();
+    private final String groupNr = "group27";
+    private int gameIdCounter = 0;
+    private String gameId = "";
 
 
-    public static Game addGame(){
-         gameId = groupNr + "-" + String.valueOf(gameIdCounter);
+    public Game addGame(){
+         gameId = groupNr + "-" + gameIdCounter;
         if (gameIdCounter < 10){
             gameId = groupNr + "-" + "00" + gameIdCounter;
         }
@@ -21,17 +20,17 @@ public class Alhambra {
             gameId = groupNr + "-" + "0" + gameIdCounter;
         }
 
-        Game newlyMadeGame = new Game(gameId);
+        Game newlyMadeGame = new Game(gameId, groupNr);
         games.add(newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
     }
 
-    public static void removeGame(Game gameToRemove){
+    public void removeGame(Game gameToRemove){
         games.removeIf(game -> game.getGameId() == gameToRemove.getGameId());
     }
 
-    public static Game findGame(String gameToFind){
+    public Game findGame(String gameToFind){
         Game matchingGame = null;
         for (Game game : games){
             if (game.getGameId().equals(gameToFind)){
@@ -41,7 +40,7 @@ public class Alhambra {
         return matchingGame;
     }
 
-    public static List<Game> getGames() {
+    public List<Game> getGames() {
         return games;
     }
 }
