@@ -7,8 +7,10 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
@@ -58,10 +60,19 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object getGames(RoutingContext ctx) {
         List<Game>listOfGames = Alhambra.getGames();
         List<String>listOfGamesInfo = new LinkedList<>();
+        String prefix = ctx.request().getParam("prefix");
+        String details = ctx.request().getParam("details");
 
-        for (Game game: listOfGames){
-            listOfGamesInfo.add(game.getGameId());
+        if (Boolean.parseBoolean(details)) {
+            for (Game game : listOfGames){
+                listOfGamesInfo.add(game.getGameId());
+            }
+        } else {
+            for (Game game : listOfGames){
+                listOfGamesInfo.add(game.getGameId());
+            }
         }
+
 
         return listOfGamesInfo;
     }
