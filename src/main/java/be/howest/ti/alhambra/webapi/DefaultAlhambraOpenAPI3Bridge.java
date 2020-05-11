@@ -60,16 +60,31 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object getGames(RoutingContext ctx) {
         List<Game>listOfGames = Alhambra.getGames();
         List<String>listOfGamesInfo = new LinkedList<>();
+        List<JsonObject>listOfGamesDetailed = new LinkedList<>();
         String prefix = ctx.request().getParam("prefix");
         String details = ctx.request().getParam("details");
 
         if (Boolean.parseBoolean(details)) {
             for (Game game : listOfGames){
-                listOfGamesInfo.add(game.getGameId());
+                if (game.getGroupNr().equals(prefix)){
+                    listOfGamesDetailed.add(new JsonObject()
+                            .put("gameId",game.getGameId())
+                            .put("players", game.getPlayers())
+                            .put("started", game.getStarted())
+                            .put("ended", game.getEnded())
+                            .put("playerCount", game.getPlayerCount())
+                            .put("readyCount", game.getReadyCount())
+                    );
+                }
+
             }
+            return listOfGamesDetailed;
+
         } else {
             for (Game game : listOfGames){
-                listOfGamesInfo.add(game.getGameId());
+                if (game.getGroupNr().equals(prefix)){
+                    listOfGamesInfo.add(game.getGameId());
+                }
             }
         }
 

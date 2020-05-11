@@ -56,4 +56,8 @@ public class Game {
     public int getReadyCount() {
         return readyCount;
     }
+
+    public String getGroupNr() {
+        return groupNr;
+    }
 }
