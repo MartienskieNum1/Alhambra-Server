@@ -1,6 +1,7 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.*;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -26,11 +27,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
-    public Alhambra getAlhambra()
-    {
-        return alhambra;
-    }
-
     public boolean verifyAdminToken(String token) {
         LOGGER.info("verifyPlayerToken");
         return true;
@@ -38,7 +34,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
-        return true;
+        String rightToken = gameId + "+" + playerName;
+        return token.equals(rightToken);
     }
 
     public Object getBuildings(RoutingContext ctx) {
@@ -78,7 +75,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
                 if (game.getGroupNr().equals(prefix)){
                     listOfGamesDetailed.add(new JsonObject()
                             .put("gameId",game.getGameId())
-                            .put("players", game.getPlayers())
+                            .put("players", game.getPlayersList())
                             .put("started", game.getStarted())
                             .put("ended", game.getEnded())
                             .put("playerCount", game.getPlayerCount())
@@ -96,7 +93,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
                 }
             }
         }
-
 
         return listOfGamesInfo;
     }
@@ -179,6 +175,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGame(RoutingContext ctx) {
+        LOGGER.info("getGame");
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         String gameId = ctx.request().getParam("gameId");
         Game gameToFind = alhambra.findGame(gameId);
 
