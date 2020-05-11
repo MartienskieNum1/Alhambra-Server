@@ -17,9 +17,16 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
     private final AlhambraController controller;
+    private final Alhambra alhambra;
 
     public DefaultAlhambraOpenAPI3Bridge() {
+        this.alhambra = new Alhambra();
         this.controller = new AlhambraController();
+    }
+
+    public Alhambra getAlhambra()
+    {
+        return alhambra;
     }
 
     public boolean verifyAdminToken(String token) {
@@ -58,7 +65,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        List<Game>listOfGames = Alhambra.getGames();
+        List<Game>listOfGames = alhambra.getGames();
         List<String>listOfGamesInfo = new LinkedList<>();
         List<JsonObject>listOfGamesDetailed = new LinkedList<>();
         String prefix = ctx.request().getParam("prefix");
@@ -93,7 +100,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object createGame(RoutingContext ctx) {
-        Game newGame = Alhambra.addGame();
+        Game newGame = alhambra.addGame();
 
         return newGame.getGameId();
     }
@@ -108,8 +115,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam("gameId");
 
         String body = ctx.getBodyAsString();
-
-        return controller.returnPlayerToken(gameId, body);
+        Game game = alhambra.findGame(gameId);
+        return controller.returnPlayerToken(game, body);
     }
 
 
@@ -166,7 +173,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getGame(RoutingContext ctx) {
         String gameId = ctx.request().getParam("gameId");
-        Game gameToFind = Alhambra.findGame(gameId);
+        Game gameToFind = alhambra.findGame(gameId);
 
 
         return new JsonObject()
