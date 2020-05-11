@@ -25,8 +25,9 @@ public class AlhambraController {
         Player player = Json.decodeValue(body, Player.class);
 
         if (game != null) {
-            game.addPlayer(player);
-            return game.getGameId() + "+" + player.getUsername();
+            String token = game.getGameId() + "+" + player.getUsername();
+            game.addPlayer(token, player);
+            return token;
         }
         return null;
     }
