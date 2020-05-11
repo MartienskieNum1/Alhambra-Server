@@ -46,4 +46,8 @@ public class AlhambraController {
         return null;
     }
 
+    public Boolean setReady() {
+
+        return true;
+    }
 }
