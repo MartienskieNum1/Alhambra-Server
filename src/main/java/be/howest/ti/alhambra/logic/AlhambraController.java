@@ -37,11 +37,12 @@ public class AlhambraController {
 
     public String returnPlayerToken(String gameId, String body) {
         Player player = Json.decodeValue(body, Player.class);
-
         Game game = Alhambra.findGame(gameId);
+
         if (game != null) {
-            game.addPlayer(player);
-            return game.getGameId() + "+" + player.getUsername();
+            String token = game.getGameId() + "+" + player.getUsername();
+            game.addPlayer(token, player);
+            return token;
         }
         return null;
     }
