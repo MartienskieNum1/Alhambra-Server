@@ -59,5 +59,7 @@ public class Player {
         return city;
     }
 
-    public void setNotReady(){ ready = false; }
+    public void setReady(){ ready = true; }
+
+
 }
