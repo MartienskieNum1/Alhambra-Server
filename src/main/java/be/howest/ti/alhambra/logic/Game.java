@@ -13,11 +13,11 @@ public class Game {
     private int readyCount;
     private Player currentPlayer;
     private Map<Currency, Building> market;
-    private Set<Coin> bank;
+    private Coin[] bank = new Coin[] {null, null, null, null};
 
-    Random rand = new Random();
-    List<Coin> remainingCoins = Coin.allCoins();
-    List<Building> remainingBuildings = BuildingFactory.getAllBuildings();
+    private Random rand = new Random();
+    private List<Coin> remainingCoins = Coin.allCoins();
+    private List<Building> remainingBuildings = BuildingFactory.getAllBuildings();
 
     public Game(String gameId, String groupNr) {
         this.market = new HashMap<>();
@@ -40,7 +40,6 @@ public class Game {
     }
 
     public void removePlayer(String token){
-        token = token.substring(7);
         players.remove(token);
         playerCount--;
     }
@@ -51,7 +50,7 @@ public class Game {
         for (int i = 0; i < 4; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
-            bank.add(randCoin);
+            bank[i] = randCoin;
             remainingCoins.remove(randCoinInt);
         }
 
@@ -91,12 +90,23 @@ public class Game {
         return readyCount;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Map<Currency, Building> getMarket() {
+        return market;
+    }
+
+    public Coin[] getBank() {
+        return bank;
+    }
+
     public String getGroupNr() {
         return groupNr;
     }
 
     public void setReady(String token){
-        token = token.substring(7);
         players.get(token).setReady();
         readyCount++;
         if (readyCount == playerCount) {
@@ -105,7 +115,6 @@ public class Game {
     }
 
     public void setNotReady(String token){
-        token = token.substring(7);
         players.get(token).setNotReady();
         readyCount--;
     }
