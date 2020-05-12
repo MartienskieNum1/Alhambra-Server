@@ -15,9 +15,11 @@ public class Game {
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
 
+    private BuildingFactory buildingFactory = new BuildingFactory();
+
     private Random rand = new Random();
     private List<Coin> remainingCoins = Coin.allCoins();
-    private List<Building> remainingBuildings = BuildingFactory.getAllBuildings();
+    private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
 
     public Game(String gameId, String groupNr) {
         this.market = new HashMap<>();

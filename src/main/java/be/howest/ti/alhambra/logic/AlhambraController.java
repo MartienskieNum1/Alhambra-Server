@@ -13,8 +13,9 @@ public class AlhambraController {
         return BuildingType.values();
     }
 
+    private BuildingFactory buildingFactory = new BuildingFactory();
     public List<Building> getBuildings() {
-        return BuildingFactory.getAllBuildings();
+        return buildingFactory.getAllBuildings();
     }
 
     public String returnPlayerToken(Game game, String body) {
