@@ -17,6 +17,7 @@ public class Game {
 
     Random rand = new Random();
     List<Coin> remainingCoins = Coin.allCoins();
+    List<Building> remainingBuildings = BuildingFactory.getAllBuildings();
 
     public Game(String gameId, String groupNr) {
         this.market = new HashMap<>();
@@ -46,12 +47,22 @@ public class Game {
 
     public void startGame() {
         currentPlayer = getPlayersList().get(0);
+
         for (int i = 0; i < 4; i++) {
-            int randInt = rand.nextInt(remainingCoins.size());
-            Coin randCoin = remainingCoins.get(randInt);
+            int randCoinInt = rand.nextInt(remainingCoins.size());
+            Coin randCoin = remainingCoins.get(randCoinInt);
             bank.add(randCoin);
-            remainingCoins.remove(randInt);
+            remainingCoins.remove(randCoinInt);
         }
+
+        market.replaceAll((key, value) -> {
+            int randBuildingInt = rand.nextInt(remainingBuildings.size());
+            Building newBuilding = remainingBuildings.get(randBuildingInt);
+            remainingBuildings.remove(randBuildingInt);
+            return newBuilding;
+        });
+
+        started = true;
     }
 
     public String getGameId() {
