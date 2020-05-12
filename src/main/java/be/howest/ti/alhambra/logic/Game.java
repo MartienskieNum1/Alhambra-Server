@@ -19,7 +19,11 @@ public class Game {
     List<Coin> remainingCoins = Coin.allCoins();
 
     public Game(String gameId, String groupNr) {
-
+        this.market = new HashMap<>();
+        this.market.put(Currency.BLUE, null);
+        this.market.put(Currency.GREEN, null);
+        this.market.put(Currency.ORANGE, null);
+        this.market.put(Currency.YELLOW, null);
         this.gameId = gameId;
         this.groupNr = groupNr;
         this.players = new HashMap<>();
