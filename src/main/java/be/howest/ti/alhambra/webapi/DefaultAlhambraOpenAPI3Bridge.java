@@ -17,7 +17,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     private final AlhambraController controller;
     private final Alhambra alhambra;
 
-
     public DefaultAlhambraOpenAPI3Bridge() {
         this.alhambra = new Alhambra();
         this.controller = new AlhambraController();
@@ -30,7 +29,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
-
         String rightToken = gameId + "+" + playerName;
         return token.equals(rightToken);
     }
@@ -108,7 +106,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object joinGame(RoutingContext ctx) {
         LOGGER.info("joinGame");
         String gameId = ctx.request().getParam("gameId");
-
         String body = ctx.getBodyAsString();
         Game game = alhambra.findGame(gameId);
         return controller.returnPlayerToken(game, body);
@@ -121,8 +118,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         game.removePlayer(token);
-        return token;
-
+        return null;
     }
 
     public Object setReady(RoutingContext ctx) {
@@ -131,7 +127,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String playerName = ctx.request().getParam("playerName");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         Game game = alhambra.findGame(id);
-
         game.setReady(token);
         return null;
     }
@@ -139,13 +134,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object setNotReady(RoutingContext ctx) {
         LOGGER.info("setNotReady");
         String id = ctx.request().getParam("gameId");
-        String playerName = ctx.request().getParam("playerName");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         Game game = alhambra.findGame(id);
-
         game.setNotReady(token);
         return null;
-
     }
 
     public Object takeMoney(RoutingContext ctx) {
@@ -160,7 +152,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         for (Coin coin : coins) {
             totalAmount += coin.getAmount();
         }
-
 
         return new JsonObject()
                 .put("gameId", gameId)
@@ -190,7 +181,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam("gameId");
         Game gameToFind = alhambra.findGame(gameId);
 
-
         return new JsonObject()
                 .put("gameId",gameToFind.getGameId())
                 .put("players", gameToFind.getPlayers())
@@ -199,5 +189,4 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
                 .put("playerCount", gameToFind.getPlayerCount())
                 .put("readyCount", gameToFind.getReadyCount());
     }
-
 }
