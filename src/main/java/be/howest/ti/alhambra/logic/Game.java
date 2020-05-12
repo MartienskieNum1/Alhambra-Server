@@ -36,6 +36,12 @@ public class Game {
         playerCount++;
     }
 
+    public void removePlayer(String token){
+        token = token.substring(7);
+        players.remove(token);
+        playerCount--;
+    }
+
     public String getGameId() {
         return gameId;
     }
