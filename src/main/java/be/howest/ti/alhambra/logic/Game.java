@@ -36,8 +36,9 @@ public class Game {
         playerCount++;
     }
 
-    public void deletePlayer(Player playerToDelete){
-
+    public void removePlayer(String token){
+        token = token.substring(7);
+        players.remove(token);
         playerCount--;
     }
 

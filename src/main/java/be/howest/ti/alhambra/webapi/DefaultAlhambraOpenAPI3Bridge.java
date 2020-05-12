@@ -17,6 +17,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     private final AlhambraController controller;
     private final Alhambra alhambra;
 
+
     public DefaultAlhambraOpenAPI3Bridge() {
         this.alhambra = new Alhambra();
         this.controller = new AlhambraController();
@@ -29,6 +30,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
+
         String rightToken = gameId + "+" + playerName;
         return token.equals(rightToken);
     }
@@ -116,14 +118,11 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object leaveGame(RoutingContext ctx) {
         LOGGER.info("leaveGame");
         String gameId = ctx.request().getParam("gameId");
-        String name = ctx.request().getParam("name");
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
-        if (verifyPlayerToken(token,gameId,name)){
-            game.getPlayers().remove(token);
-            return null;
-        }
-        return -1;
+        game.removePlayer(token);
+        return token;
+
     }
 
     public Object setReady(RoutingContext ctx) {
