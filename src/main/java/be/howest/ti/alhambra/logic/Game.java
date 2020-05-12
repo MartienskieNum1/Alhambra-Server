@@ -42,6 +42,10 @@ public class Game {
         playerCount--;
     }
 
+    public void startGame() {
+
+    }
+
     public String getGameId() {
         return gameId;
     }
@@ -76,6 +80,9 @@ public class Game {
         token = token.substring(7);
         players.get(token).setReady();
         readyCount++;
+        if (readyCount == playerCount) {
+            startGame();
+        }
     }
 
     public void setNotReady(String token){
