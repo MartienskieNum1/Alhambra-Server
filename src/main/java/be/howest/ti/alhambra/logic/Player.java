@@ -13,7 +13,7 @@ public class Player {
     private final String username;
     private int score;
     private int virtualScore;
-    private boolean ready = false;
+    private boolean ready;
     private List<Coin> coins;
     private List<Building> reserve;
     private List<Building> buildingsInHand;
@@ -24,6 +24,7 @@ public class Player {
         this.username = username;
         this.score = 0;
         this.virtualScore = 0;
+        this.ready = false;
         this.coins =  new LinkedList<>();
         this.reserve = new LinkedList<>();
         this.buildingsInHand = new LinkedList<>();
