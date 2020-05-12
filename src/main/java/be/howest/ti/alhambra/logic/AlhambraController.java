@@ -46,9 +46,4 @@ public class AlhambraController {
         return null;
     }
 
-    public String setReady(String id, String playerName) {
-
-        
-        return null;
-    }
 }

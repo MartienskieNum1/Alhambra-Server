@@ -67,13 +67,11 @@ public class Game {
     }
 
     public void setReady(String token){
+        token = token.substring(7);
         players.get(token).setReady();
         readyCount++;
     }
 
-    public void setNotReady(String token){
-        players.get(token).setNotReady();
-        readyCount--;
-    }
+
 }
 

@@ -61,5 +61,5 @@ public class Player {
 
     public void setReady(){ ready = true; }
 
-    public void setNotReady(){ ready = false; }
+
 }

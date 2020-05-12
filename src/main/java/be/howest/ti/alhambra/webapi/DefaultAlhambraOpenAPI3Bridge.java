@@ -32,7 +32,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
-        token = token.substring(6);
         String rightToken = gameId + "+" + playerName;
         return token.equals(rightToken);
     }
@@ -129,27 +128,13 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
         Game game = alhambra.findGame(id);
 
-//        String test = id + playerName + token;
-
-        if (verifyPlayerToken(token, id, playerName)){
-            game.setReady(token);
-            return null;
-        }
-        return verifyPlayerToken(token, id, playerName);
+        game.setReady(token);
+        return null;
     }
 
     public Object setNotReady(RoutingContext ctx) {
         LOGGER.info("setNotReady");
-        String id = ctx.request().getParam("gameId");
-        String playerName = ctx.request().getParam("playerName");
-        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION);
-        Game game = alhambra.findGame(id);
-
-        if (verifyPlayerToken(token, id, playerName)){
-            game.setNotReady(token);
-            return null;
-        }
-        return -1;
+        return null;
     }
 
     public Object takeMoney(RoutingContext ctx) {
