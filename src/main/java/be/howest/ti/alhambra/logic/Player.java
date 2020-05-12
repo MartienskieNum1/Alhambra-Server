@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(value = {"coins", "reserve", "buildingsInHand","city"})
 public class Player {
@@ -62,4 +63,24 @@ public class Player {
     public void setReady(){ ready = true; }
 
     public void setNotReady(){ ready = false; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return score == player.score &&
+                virtualScore == player.virtualScore &&
+                ready == player.ready &&
+                Objects.equals(username, player.username) &&
+                Objects.equals(coins, player.coins) &&
+                Objects.equals(reserve, player.reserve) &&
+                Objects.equals(buildingsInHand, player.buildingsInHand) &&
+                Objects.equals(city, player.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, score, virtualScore, ready, coins, reserve, buildingsInHand, city);
+    }
 }

@@ -1,9 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
 
@@ -16,12 +13,20 @@ public class Game {
     private int readyCount;
     private Player currentPlayer;
     private Map<Currency, Building> market;
-    private Map<Currency, Coin> bank;
+    private Coin[] bank = new Coin[] {null, null, null, null};
 
+    private BuildingFactory buildingFactory = new BuildingFactory();
 
+    private Random rand = new Random();
+    private List<Coin> remainingCoins = Coin.allCoins();
+    private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
 
     public Game(String gameId, String groupNr) {
-
+        this.market = new HashMap<>();
+        this.market.put(Currency.BLUE, null);
+        this.market.put(Currency.GREEN, null);
+        this.market.put(Currency.ORANGE, null);
+        this.market.put(Currency.YELLOW, null);
         this.gameId = gameId;
         this.groupNr = groupNr;
         this.players = new HashMap<>();
@@ -37,9 +42,28 @@ public class Game {
     }
 
     public void removePlayer(String token){
-        token = token.substring(7);
         players.remove(token);
         playerCount--;
+    }
+
+    public void startGame() {
+        currentPlayer = getPlayersList().get(0);
+
+        for (int i = 0; i < 4; i++) {
+            int randCoinInt = rand.nextInt(remainingCoins.size());
+            Coin randCoin = remainingCoins.get(randCoinInt);
+            bank[i] = randCoin;
+            remainingCoins.remove(randCoinInt);
+        }
+
+        market.replaceAll((key, value) -> {
+            int randBuildingInt = rand.nextInt(remainingBuildings.size());
+            Building newBuilding = remainingBuildings.get(randBuildingInt);
+            remainingBuildings.remove(randBuildingInt);
+            return newBuilding;
+        });
+
+        started = true;
     }
 
     public String getGameId() {
@@ -68,18 +92,31 @@ public class Game {
         return readyCount;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Map<Currency, Building> getMarket() {
+        return market;
+    }
+
+    public Coin[] getBank() {
+        return bank;
+    }
+
     public String getGroupNr() {
         return groupNr;
     }
 
     public void setReady(String token){
-        token = token.substring(7);
         players.get(token).setReady();
         readyCount++;
+        if (readyCount == playerCount) {
+            startGame();
+        }
     }
 
     public void setNotReady(String token){
-        token = token.substring(7);
         players.get(token).setNotReady();
         readyCount--;
     }
