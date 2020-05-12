@@ -13,6 +13,7 @@ public class Player {
     private final String username;
     private int score;
     private int virtualScore;
+    private boolean ready = false;
     private List<Coin> coins;
     private List<Building> reserve;
     private List<Building> buildingsInHand;
@@ -56,4 +57,6 @@ public class Player {
     public List<Building> getCity() {
         return city;
     }
+
+    public void setNotReady(){ ready = false; }
 }

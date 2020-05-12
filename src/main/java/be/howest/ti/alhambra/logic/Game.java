@@ -65,4 +65,10 @@ public class Game {
     public String getGroupNr() {
         return groupNr;
     }
+
+    public void setNotReady(String token){
+        token = token.substring(7);
+        players.get(token).setNotReady();
+        readyCount--;
+    }
 }
