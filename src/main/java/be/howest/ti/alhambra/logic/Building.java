@@ -13,9 +13,12 @@ public class Building {
     private Map<String, Boolean> walls = new HashMap<>();
 
     @JsonCreator
-    public Building(@JsonProperty("buildingType") BuildingType buildingType, @JsonProperty("cost") int cost, boolean north, boolean east, boolean south, boolean west) {
+    public Building(@JsonProperty("type") BuildingType buildingType, @JsonProperty("cost") int cost) {
         this.buildingType = buildingType;
         this.cost = cost;
+    }
+
+    public void putWallOnBuilding(boolean north, boolean east, boolean south, boolean west) {
         this.walls.put("north", north);
         this.walls.put("east", east);
         this.walls.put("south", south);
