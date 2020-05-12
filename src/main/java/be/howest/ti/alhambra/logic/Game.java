@@ -1,9 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
 
@@ -16,9 +13,10 @@ public class Game {
     private int readyCount;
     private Player currentPlayer;
     private Map<Currency, Building> market;
-    private Map<Currency, Coin> bank;
+    private Set<Coin> bank;
 
-
+    Random rand = new Random();
+    List<Coin> remainingCoins = Coin.allCoins();
 
     public Game(String gameId, String groupNr) {
 
@@ -43,7 +41,13 @@ public class Game {
     }
 
     public void startGame() {
-
+        currentPlayer = getPlayersList().get(0);
+        for (int i = 0; i < 4; i++) {
+            int randInt = rand.nextInt(remainingCoins.size());
+            Coin randCoin = remainingCoins.get(randInt);
+            bank.add(randCoin);
+            remainingCoins.remove(randInt);
+        }
     }
 
     public String getGameId() {
