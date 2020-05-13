@@ -10,23 +10,19 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AlhambraControllerTest {
+    Alhambra alhambra = new Alhambra();
+    AlhambraController controller = new AlhambraController();
+    Player player1 = new Player("maarten");
+    Player player2 = new Player("jos");
+    Player player3 = new Player("Jef");
 
     @Test
     void returnListGameDetails() {
-        List<String> games = new LinkedList<>();
-        games.add("group27-000");
-
-        Alhambra alhambra = new Alhambra();
-        AlhambraController controller = new AlhambraController();
-        Player player1 = new Player("maarten");
-        Player player2 = new Player("jos");
-        Player player3 = new Player("Jef");
         alhambra.addGame(); //group27-000
         Game myGame = alhambra.findGame("group27-000");
 
-        myGame.addPlayer("group27-000+maarten", player1);
-        myGame.addPlayer("group27-000+jos", player2);
-        myGame.addPlayer("group27-000+jef", player3);
+        List<String> exampleGames = new LinkedList<>();
+        exampleGames.add("group27-000");
 
         List<JsonObject> detailedGames = new LinkedList<>();
         detailedGames.add(new JsonObject()
@@ -37,7 +33,11 @@ class AlhambraControllerTest {
                 .put("playerCount", myGame.getPlayerCount())
                 .put("readyCount", myGame.getReadyCount()));
 
-        assertEquals(games, controller.returnListGameDetails(alhambra.getGames(), "group27", "false"));
+        myGame.addPlayer("group27-000+maarten", player1);
+        myGame.addPlayer("group27-000+jos", player2);
+        myGame.addPlayer("group27-000+jef", player3);
+
+        assertEquals(exampleGames, controller.returnListGameDetails(alhambra.getGames(), "group27", "false"));
         assertEquals(detailedGames, controller.returnListGameDetails(alhambra.getGames(), "group27", "true"));
 
         myGame.setPlayerReady("group27-000+maarten");
@@ -46,6 +46,18 @@ class AlhambraControllerTest {
 
         assertEquals(Collections.emptyList(), controller.returnListGameDetails(alhambra.getGames(), "group27", "false"));
         assertEquals(Collections.emptyList(), controller.returnListGameDetails(alhambra.getGames(), "group27", "true"));
+    }
+
+
+    @Test
+    void returnPlayerToken() {
+        alhambra.addGame(); //group27-000
+        Game myGame = alhambra.findGame("group27-000");
+
+        Player player1 = new Player("maarten");
+
+        assertEquals("group27-000+maarten", controller.returnPlayerToken(myGame, player1));
+        assertThrows(IllegalArgumentException.class, () -> controller.returnPlayerToken(null, player1));
 
     }
 }
