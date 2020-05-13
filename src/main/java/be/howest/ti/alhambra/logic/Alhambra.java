@@ -10,6 +10,9 @@ public class Alhambra {
     private int gameIdCounter = 0;
     private String gameId = "";
 
+    public void clearGames(){
+        games.clear();
+    }
 
     public Game addGame(){
          gameId = groupNr + "-" + gameIdCounter;
@@ -24,10 +27,6 @@ public class Alhambra {
         games.add(newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
-    }
-
-    public void removeGame(Game gameToRemove){
-        games.removeIf(game -> game.getGameId() == gameToRemove.getGameId());
     }
 
     public Game findGame(String gameToFind){

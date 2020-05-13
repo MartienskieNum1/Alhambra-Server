@@ -20,9 +20,9 @@ class GameTest {
         myGame.addPlayer("group27-000+maarten", player1);
         myGame.addPlayer("group27-000+jos", player2);
         myGame.addPlayer("group27-000+jef", player3);
-        myGame.setReady("group27-000+maarten");
-        myGame.setReady("group27-000+jef");
-        myGame.setReady("group27-000+jos");
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
 
         assertNotNull(myGame.getCurrentPlayer());
 
