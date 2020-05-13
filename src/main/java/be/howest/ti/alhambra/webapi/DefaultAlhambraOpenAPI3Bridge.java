@@ -126,7 +126,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setReady(token);
+        game.setPlayerReady(token);
         return null;
     }
 
@@ -135,7 +135,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setNotReady(token);
+        game.setPlayerNotReady(token);
         return null;
     }
 
