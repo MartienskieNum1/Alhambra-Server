@@ -7,6 +7,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -165,7 +167,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam("gameId");
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        game.buyBuilding(token);
+        String body = ctx.getBodyAsString();
+        Coin[] coins = Json.decodeValue(body, Coin[].class);
+        Currency currency = Json.decodeValue(body, Currency.class);
+        game.buyBuilding(token, Arrays.asList(coins), currency);
         return null;
     }
 
