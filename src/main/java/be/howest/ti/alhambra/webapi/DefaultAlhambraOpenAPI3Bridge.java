@@ -99,8 +99,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object clearGames(RoutingContext ctx) {
-        LOGGER.info("clearGames");
-        return null;
+        for (Game game: alhambra.games) {
+            alhambra.games.remove(game);
+        }
+        return alhambra.games;
     }
 
     public Object joinGame(RoutingContext ctx) {
