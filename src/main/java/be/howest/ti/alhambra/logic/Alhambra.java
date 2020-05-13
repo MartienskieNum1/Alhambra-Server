@@ -1,18 +1,19 @@
 package be.howest.ti.alhambra.logic;
 
 
+import io.vertx.core.json.Json;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Alhambra {
     public List<Game> games = new LinkedList<>();
-    private final String groupNr = "group27";
     private int gameIdCounter = 0;
     private String gameId = "";
 
 
-    public Game addGame(){
-         gameId = groupNr + "-" + gameIdCounter;
+    public Game addGame(String groupNr){
+        gameId = groupNr + "-" + gameIdCounter;
         if (gameIdCounter < 10){
             gameId = groupNr + "-" + "00" + gameIdCounter;
         }

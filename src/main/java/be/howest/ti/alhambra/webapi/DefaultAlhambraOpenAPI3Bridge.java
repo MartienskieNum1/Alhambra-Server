@@ -93,8 +93,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object createGame(RoutingContext ctx) {
-        Game newGame = alhambra.addGame();
+
         String body = ctx.getBodyAsString();
+        String groupNr = body;
+        Game newGame = alhambra.addGame(groupNr);
 
         return newGame.getGameId();
     }
