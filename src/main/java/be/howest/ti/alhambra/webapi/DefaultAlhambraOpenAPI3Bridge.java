@@ -69,29 +69,25 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String details = ctx.request().getParam("details");
 
         if (Boolean.parseBoolean(details)) {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
+            for (Game game : listOfGames) {
+                if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
                     listOfGamesDetailed.add(new JsonObject()
                             .put("gameId",game.getGameId())
                             .put("players", game.getPlayersList())
                             .put("started", game.getStarted())
                             .put("ended", game.getEnded())
                             .put("playerCount", game.getPlayerCount())
-                            .put("readyCount", game.getReadyCount())
-                    );
+                            .put("readyCount", game.getReadyCount()));
                 }
-
             }
             return listOfGamesDetailed;
-
         } else {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
+            for (Game game : listOfGames) {
+                if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
                     listOfGamesInfo.add(game.getGameId());
                 }
             }
         }
-
         return listOfGamesInfo;
     }
 
