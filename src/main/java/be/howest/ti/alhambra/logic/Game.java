@@ -121,5 +121,13 @@ public class Game {
         readyCount--;
     }
 
+    public void addCoin(String token,Coin[] coins){
+        if (players.get(token).equals(getCurrentPlayer())){
+            for (Coin coin: coins){
+                players.get(token).addCoinToWallet(coin);
+            }
+        }
+
+    }
 }
 
