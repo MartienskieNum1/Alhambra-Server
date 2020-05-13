@@ -22,13 +22,16 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
-    public boolean verifyAdminToken(String token) {
-        LOGGER.info("verifyPlayerToken");
-        return true;
+    public boolean verifyAdminToken(String password) {
+        String adminPassword = "-HhpQgVw9*";
+        return adminPassword.equals(password);
     }
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
+        if (playerName == null) {
+            playerName = alhambra.findGame(gameId).getPlayers().get(token).getUsername();
+        }
         String rightToken = gameId + "+" + playerName;
         return token.equals(rightToken);
     }
@@ -49,7 +52,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getCurrencies(RoutingContext ctx) {
-        LOGGER.info("getCurrencies");
+        LOGGER.info("getCurrencies"); 
         return controller.getCurrencies();
     }
 
@@ -60,36 +63,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getGames(RoutingContext ctx) {
         List<Game>listOfGames = alhambra.getGames();
-        List<String>listOfGamesInfo = new LinkedList<>();
-        List<JsonObject>listOfGamesDetailed = new LinkedList<>();
         String prefix = ctx.request().getParam("prefix");
         String details = ctx.request().getParam("details");
 
-        if (Boolean.parseBoolean(details)) {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
-                    listOfGamesDetailed.add(new JsonObject()
-                            .put("gameId",game.getGameId())
-                            .put("players", game.getPlayersList())
-                            .put("started", game.getStarted())
-                            .put("ended", game.getEnded())
-                            .put("playerCount", game.getPlayerCount())
-                            .put("readyCount", game.getReadyCount())
-                    );
-                }
-
-            }
-            return listOfGamesDetailed;
-
-        } else {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
-                    listOfGamesInfo.add(game.getGameId());
-                }
-            }
-        }
-
-        return listOfGamesInfo;
+        return controller.returnListGameDetails(listOfGames, prefix, details);
     }
 
     public Object createGame(RoutingContext ctx) {
@@ -99,7 +76,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object clearGames(RoutingContext ctx) {
-        LOGGER.info("clearGames");
+        alhambra.clearGames();
         return null;
     }
 
@@ -126,7 +103,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setReady(token);
+        game.setPlayerReady(token);
         return null;
     }
 
@@ -135,7 +112,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setNotReady(token);
+        game.setPlayerNotReady(token);
         return null;
     }
 
