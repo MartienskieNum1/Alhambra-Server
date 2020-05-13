@@ -27,7 +27,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public boolean verifyAdminToken(String password) {
         String adminPassword = "-HhpQgVw9*";
-        LOGGER.info("verifyAdminToken");
         return adminPassword.equals(password);
     }
 
