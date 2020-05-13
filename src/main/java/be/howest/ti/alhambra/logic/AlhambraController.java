@@ -21,15 +21,13 @@ public class AlhambraController {
         return buildingFactory.getAllBuildings();
     }
 
-    public String returnPlayerToken(Game game, String body) {
-        Player player = Json.decodeValue(body, Player.class);
-
+    public String returnPlayerToken(Game game, Player player) {
         if (game != null) {
             String token = game.getGameId() + "+" + player.getUsername();
             game.addPlayer(token, player);
             return token;
         }
-        return null;
+        throw new IllegalArgumentException();
     }
 
     public Object returnListGameDetails(List<Game> allGames, String prefix, String details) {
