@@ -22,9 +22,9 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
-    public boolean verifyAdminToken(String token) {
-        LOGGER.info("verifyPlayerToken");
-        return true;
+    public boolean verifyAdminToken(String password) {
+        String adminPassword = "-HhpQgVw9*";
+        return adminPassword.equals(password);
     }
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
@@ -52,7 +52,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getCurrencies(RoutingContext ctx) {
-        LOGGER.info("getCurrencies");
+        LOGGER.info("getCurrencies"); 
         return controller.getCurrencies();
     }
 
