@@ -64,6 +64,10 @@ public class Player {
 
     public void setItselfNotReady(){ ready = false; }
 
+    public void addCoinToWallet(Coin coin){
+        coins.add(coin);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

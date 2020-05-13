@@ -119,20 +119,12 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object takeMoney(RoutingContext ctx) {
         LOGGER.info("takeMoney");
         String gameId = ctx.request().getParam("gameId");
-        String playerName = ctx.request().getParam("playerName");
-
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         String body = ctx.getBodyAsString();
         Coin[] coins = Json.decodeValue(body, Coin[].class);
-
-        int totalAmount = 0;
-        for (Coin coin : coins) {
-            totalAmount += coin.getAmount();
-        }
-
-        return new JsonObject()
-                .put("gameId", gameId)
-                .put("playerName", playerName)
-                .put("totalAmount", totalAmount);
+        Game game = alhambra.findGame(gameId);
+        game.addCoin(token, coins);
+        return null;
     }
 
     public Object buyBuilding(RoutingContext ctx) {
