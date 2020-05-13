@@ -20,6 +20,9 @@ class AlhambraControllerTest {
     void returnListGameDetails() {
         alhambra.addGame(); //group27-000
         Game myGame = alhambra.findGame("group27-000");
+        myGame.addPlayer("group27-000+maarten", player1);
+        myGame.addPlayer("group27-000+jos", player2);
+        myGame.addPlayer("group27-000+jef", player3);
 
         List<String> exampleGames = new LinkedList<>();
         exampleGames.add("group27-000");
@@ -32,10 +35,6 @@ class AlhambraControllerTest {
                 .put("ended", myGame.getEnded())
                 .put("playerCount", myGame.getPlayerCount())
                 .put("readyCount", myGame.getReadyCount()));
-
-        myGame.addPlayer("group27-000+maarten", player1);
-        myGame.addPlayer("group27-000+jos", player2);
-        myGame.addPlayer("group27-000+jef", player3);
 
         assertEquals(exampleGames, controller.returnListGameDetails(alhambra.getGames(), "group27", "false"));
         assertEquals(detailedGames, controller.returnListGameDetails(alhambra.getGames(), "group27", "true"));
