@@ -60,9 +60,9 @@ public class Player {
         return city;
     }
 
-    public void setReady(){ ready = true; }
+    public void setItselfReady(){ ready = true; }
 
-    public void setNotReady(){ ready = false; }
+    public void setItselfNotReady(){ ready = false; }
 
     @Override
     public boolean equals(Object o) {
