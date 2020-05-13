@@ -162,6 +162,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object buyBuilding(RoutingContext ctx) {
         LOGGER.info("buyBuilding");
+        String gameId = ctx.request().getParam("gameId");
+        Game game = alhambra.findGame(gameId);
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+        game.buyBuilding(token);
         return null;
     }
 

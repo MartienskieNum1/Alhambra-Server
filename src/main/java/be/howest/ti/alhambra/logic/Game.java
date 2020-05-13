@@ -121,5 +121,18 @@ public class Game {
         readyCount--;
     }
 
-}
+    public boolean checkIfCurrentPlayersTurn(Player player) {
+        return player.equals(getCurrentPlayer());
+    }
 
+    public void buyBuilding(String token, Coin[] coins) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+
+        }
+        else {
+            throw new IllegalArgumentException("It's not your turn!");
+        }
+    }
+
+}

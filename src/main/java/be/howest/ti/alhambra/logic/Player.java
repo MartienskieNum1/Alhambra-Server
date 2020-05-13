@@ -64,6 +64,13 @@ public class Player {
 
     public void setNotReady(){ ready = false; }
 
+    public void addBuilding(Building building, List<Coin> coins) {
+        for(Coin coin : coins) {
+            this.coins.removeIf(coin::equals);
+        }
+        buildingsInHand.add(building);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
