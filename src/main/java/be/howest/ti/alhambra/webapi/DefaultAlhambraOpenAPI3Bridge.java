@@ -10,6 +10,7 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
@@ -66,7 +67,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getGames(RoutingContext ctx) {
-        List<Game>listOfGames = alhambra.getGames();
+        Map<String, Game> listOfGames = alhambra.getGames();
         String prefix = ctx.request().getParam("prefix");
         String details = ctx.request().getParam("details");
 

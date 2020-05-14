@@ -30,12 +30,14 @@ public class AlhambraController {
         throw new IllegalArgumentException();
     }
 
-    public Object returnListGameDetails(List<Game> allGames, String prefix, String details) {
+    public Object returnListGameDetails(Map<String, Game> allGames, String prefix, String details) {
         List<String>listOfGamesInfo = new LinkedList<>();
         List<JsonObject>listOfGamesDetailed = new LinkedList<>();
 
         if (Boolean.parseBoolean(details)) {
-            for (Game game : allGames) {
+            for (Map.Entry<String, Game> entry : allGames.entrySet()) {
+                Game game = entry.getValue();
+                String gameId = entry.getKey();
                 if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
                     listOfGamesDetailed.add(new JsonObject()
                             .put("gameId",game.getGameId())
@@ -48,7 +50,8 @@ public class AlhambraController {
             }
             return listOfGamesDetailed;
         } else {
-            for (Game game : allGames) {
+            for (Map.Entry<String, Game> entry : allGames.entrySet()) {
+                Game game = entry.getValue();
                 if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
                     listOfGamesInfo.add(game.getGameId());
                 }
