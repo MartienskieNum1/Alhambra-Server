@@ -1,6 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
@@ -59,5 +58,14 @@ public class AlhambraController {
             }
         }
         return listOfGamesInfo;
+    }
+    public Map getScoringTable(int round) {
+        if (round == 1){
+            return new ScoringTable().makeRound1();
+        }
+        if (round == 2){
+            return new ScoringTable().makeRound2();
+        }
+        else {return new ScoringTable().makeRound3();}
     }
 }
