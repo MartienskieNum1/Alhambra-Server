@@ -127,13 +127,30 @@ public class Game {
         checkIfGameMeetsRequirements();
     }
 
-    public void addCoin(String token,Coin[] coins){
-        if (players.get(token).equals(getCurrentPlayer())){
-            for (Coin coin: coins){
+    public void addCoin(String token,Coin[] coins) {
+        if (players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
                 players.get(token).addCoinToWallet(coin);
             }
         }
+    }
 
+    public boolean checkIfCurrentPlayersTurn(Player player) {
+        return player.equals(getCurrentPlayer());
+    }
+
+    public void buyBuilding(String token, List<Coin> coins, Currency currency) {
+        Building building = market.get(currency);
+        int randBuildingInt = rand.nextInt(remainingBuildings.size());
+        Building newBuilding = remainingBuildings.get(randBuildingInt);
+        market.replace(currency, newBuilding);
+        remainingBuildings.remove(randBuildingInt);
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            player.addBuilding(building, coins);
+        }
+        else {
+            throw new IllegalArgumentException("It's not your turn!");
+        }
     }
 }
-
