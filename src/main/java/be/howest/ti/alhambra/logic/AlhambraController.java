@@ -4,6 +4,7 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class AlhambraController {
 
@@ -54,5 +55,14 @@ public class AlhambraController {
             }
         }
         return listOfGamesInfo;
+    }
+    public Map getScoringTable(int round) {
+        if (round == 1){
+            return new ScoringTable().makeRound1();
+        }
+        if (round == 2){
+            return new ScoringTable().makeRound2();
+        }
+        else {return new ScoringTable().makeRound3();}
     }
 }
