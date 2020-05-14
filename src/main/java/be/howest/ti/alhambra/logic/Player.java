@@ -60,9 +60,20 @@ public class Player {
         return city;
     }
 
-    public void setReady(){ ready = true; }
+    public void setItselfReady(){ ready = true; }
 
-    public void setNotReady(){ ready = false; }
+    public void setItselfNotReady(){ ready = false; }
+
+    public void addCoinToWallet(Coin coin){
+        coins.add(coin);
+    }
+
+    public void addBuilding(Building building, List<Coin> coins) {
+        for(Coin coin : coins) {
+            this.coins.removeIf(coin::equals);
+        }
+        buildingsInHand.add(building);
+    }
 
     @Override
     public boolean equals(Object o) {

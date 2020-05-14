@@ -7,7 +7,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-import java.util.LinkedList;
+
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -22,13 +23,16 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
-    public boolean verifyAdminToken(String token) {
-        LOGGER.info("verifyPlayerToken");
-        return true;
+    public boolean verifyAdminToken(String password) {
+        String adminPassword = "-HhpQgVw9*";
+        return adminPassword.equals(password);
     }
 
     public boolean verifyPlayerToken(String token, String gameId, String playerName) {
         LOGGER.info("verifyPlayerToken");
+        if (playerName == null) {
+            playerName = alhambra.findGame(gameId).getPlayers().get(token).getUsername();
+        }
         String rightToken = gameId + "+" + playerName;
         return token.equals(rightToken);
     }
@@ -49,7 +53,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getCurrencies(RoutingContext ctx) {
-        LOGGER.info("getCurrencies");
+        LOGGER.info("getCurrencies"); 
         return controller.getCurrencies();
     }
 
@@ -60,36 +64,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getGames(RoutingContext ctx) {
         List<Game>listOfGames = alhambra.getGames();
-        List<String>listOfGamesInfo = new LinkedList<>();
-        List<JsonObject>listOfGamesDetailed = new LinkedList<>();
         String prefix = ctx.request().getParam("prefix");
         String details = ctx.request().getParam("details");
 
-        if (Boolean.parseBoolean(details)) {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
-                    listOfGamesDetailed.add(new JsonObject()
-                            .put("gameId",game.getGameId())
-                            .put("players", game.getPlayersList())
-                            .put("started", game.getStarted())
-                            .put("ended", game.getEnded())
-                            .put("playerCount", game.getPlayerCount())
-                            .put("readyCount", game.getReadyCount())
-                    );
-                }
-
-            }
-            return listOfGamesDetailed;
-
-        } else {
-            for (Game game : listOfGames){
-                if (game.getGroupNr().equals(prefix)){
-                    listOfGamesInfo.add(game.getGameId());
-                }
-            }
-        }
-
-        return listOfGamesInfo;
+        return controller.returnListGameDetails(listOfGames, prefix, details);
     }
 
     public Object createGame(RoutingContext ctx) {
@@ -102,7 +80,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object clearGames(RoutingContext ctx) {
-        alhambra.games.clear();
+        alhambra.clearGames();
         return null;
     }
 
@@ -111,7 +89,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam("gameId");
         String body = ctx.getBodyAsString();
         Game game = alhambra.findGame(gameId);
-        return controller.returnPlayerToken(game, body);
+        Player player = Json.decodeValue(body, Player.class);
+        return controller.returnPlayerToken(game, player);
     }
 
 
@@ -129,7 +108,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setReady(token);
+        game.setPlayerReady(token);
         return null;
     }
 
@@ -138,34 +117,31 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String id = ctx.request().getParam("gameId");
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
-        game.setNotReady(token);
+        game.setPlayerNotReady(token);
         return null;
     }
 
     public Object takeMoney(RoutingContext ctx) {
         LOGGER.info("takeMoney");
         String gameId = ctx.request().getParam("gameId");
-        String playerName = ctx.request().getParam("playerName");
-
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         String body = ctx.getBodyAsString();
         Coin[] coins = Json.decodeValue(body, Coin[].class);
-
-        int totalAmount = 0;
-        for (Coin coin : coins) {
-            totalAmount += coin.getAmount();
-        }
-
-        return new JsonObject()
-                .put("gameId", gameId)
-                .put("playerName", playerName)
-                .put("totalAmount", totalAmount);
+        Game game = alhambra.findGame(gameId);
+        game.addCoin(token, coins);
+        return null;
     }
 
     public Object buyBuilding(RoutingContext ctx) {
         LOGGER.info("buyBuilding");
+        String gameId = ctx.request().getParam("gameId");
+        Game game = alhambra.findGame(gameId);
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+        Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
+        Currency currency = Currency.valueOf(ctx.getBodyAsJson().getString("currency").toUpperCase());
+        game.buyBuilding(token, Arrays.asList(coins), currency);
         return null;
     }
-
 
     public Object redesign(RoutingContext ctx) {
         LOGGER.info("redesign");

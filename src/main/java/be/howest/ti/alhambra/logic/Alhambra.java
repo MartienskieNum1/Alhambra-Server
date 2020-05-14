@@ -1,8 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-
-import io.vertx.core.json.Json;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +16,10 @@ public class Alhambra {
         return counter;
     }
 
+    public void clearGames(){
+        games.clear();
+    }
+
     public Game addGame(String groupNr){
         int counter = getCounter(groupNr);
         String gameId = groupNr + "-" + counter;
@@ -29,12 +30,10 @@ public class Alhambra {
             gameId = groupNr + "-" + "0" + counter;
         }
 
-
         Game newlyMadeGame = new Game(gameId, groupNr);
         games.add(newlyMadeGame);
         return newlyMadeGame;
     }
-
 
     public void removeGame(Game gameToRemove){
         games.removeIf(game -> game.getGameId().equals(gameToRemove.getGameId()));

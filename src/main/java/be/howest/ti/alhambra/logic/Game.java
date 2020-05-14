@@ -41,9 +41,10 @@ public class Game {
         playerCount++;
     }
 
-    public void removePlayer(String token){
-        players.remove(token);
-        playerCount--;
+    public void checkIfGameMeetsRequirements(){
+        if (playerCount >= 2 && readyCount == playerCount){
+            startGame();
+        }
     }
 
     public void startGame() {
@@ -108,18 +109,48 @@ public class Game {
         return groupNr;
     }
 
-    public void setReady(String token){
-        players.get(token).setReady();
+    public void setPlayerReady(String token){
+        players.get(token).setItselfReady();
         readyCount++;
-        if (readyCount == playerCount) {
-            startGame();
+        checkIfGameMeetsRequirements();
+    }
+
+    public void setPlayerNotReady(String token){
+        players.get(token).setItselfNotReady();
+        readyCount--;
+        checkIfGameMeetsRequirements();
+    }
+
+    public void removePlayer(String token){
+        players.remove(token);
+        playerCount--;
+        checkIfGameMeetsRequirements();
+    }
+
+    public void addCoin(String token,Coin[] coins) {
+        if (players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+            }
         }
     }
 
-    public void setNotReady(String token){
-        players.get(token).setNotReady();
-        readyCount--;
+    public boolean checkIfCurrentPlayersTurn(Player player) {
+        return player.equals(getCurrentPlayer());
     }
 
+    public void buyBuilding(String token, List<Coin> coins, Currency currency) {
+        Building building = market.get(currency);
+        int randBuildingInt = rand.nextInt(remainingBuildings.size());
+        Building newBuilding = remainingBuildings.get(randBuildingInt);
+        market.replace(currency, newBuilding);
+        remainingBuildings.remove(randBuildingInt);
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            player.addBuilding(building, coins);
+        }
+        else {
+            throw new IllegalArgumentException("It's not your turn!");
+        }
+    }
 }
-
