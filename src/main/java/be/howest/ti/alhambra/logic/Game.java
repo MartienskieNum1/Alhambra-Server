@@ -41,9 +41,10 @@ public class Game {
         playerCount++;
     }
 
-    public void removePlayer(String token){
-        players.remove(token);
-        playerCount--;
+    public void checkIfGameMeetsRequirements(){
+        if (playerCount >= 2 && readyCount == playerCount){
+            startGame();
+        }
     }
 
     public void startGame() {
@@ -108,17 +109,30 @@ public class Game {
         return groupNr;
     }
 
-    public void setReady(String token){
-        players.get(token).setReady();
+    public void setPlayerReady(String token){
+        players.get(token).setItselfReady();
         readyCount++;
-        if (readyCount == playerCount) {
-            startGame();
-        }
+        checkIfGameMeetsRequirements();
     }
 
-    public void setNotReady(String token){
-        players.get(token).setNotReady();
+    public void setPlayerNotReady(String token){
+        players.get(token).setItselfNotReady();
         readyCount--;
+        checkIfGameMeetsRequirements();
+    }
+
+    public void removePlayer(String token){
+        players.remove(token);
+        playerCount--;
+        checkIfGameMeetsRequirements();
+    }
+
+    public void addCoin(String token,Coin[] coins) {
+        if (players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+            }
+        }
     }
 
     public boolean checkIfCurrentPlayersTurn(Player player) {
@@ -139,5 +153,4 @@ public class Game {
             throw new IllegalArgumentException("It's not your turn!");
         }
     }
-
 }
