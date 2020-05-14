@@ -15,6 +15,7 @@ import java.util.List;
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
+    public static final String GAME_ID = "gameId";
     private final AlhambraController controller;
     private final Alhambra alhambra;
 
@@ -23,6 +24,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
+    @SuppressWarnings("squid:S2068")
     public boolean verifyAdminToken(String password) {
         String adminPassword = "-HhpQgVw9*";
         return adminPassword.equals(password);
@@ -86,7 +88,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object joinGame(RoutingContext ctx) {
         LOGGER.info("joinGame");
-        String gameId = ctx.request().getParam("gameId");
+        String gameId = ctx.request().getParam(GAME_ID);
         String body = ctx.getBodyAsString();
         Game game = alhambra.findGame(gameId);
         Player player = Json.decodeValue(body, Player.class);
@@ -96,7 +98,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object leaveGame(RoutingContext ctx) {
         LOGGER.info("leaveGame");
-        String gameId = ctx.request().getParam("gameId");
+        String gameId = ctx.request().getParam(GAME_ID);
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         game.removePlayer(token);
@@ -105,7 +107,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object setReady(RoutingContext ctx) {
         LOGGER.info("setReady");
-        String id = ctx.request().getParam("gameId");
+        String id = ctx.request().getParam(GAME_ID);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
         game.setPlayerReady(token);
@@ -114,7 +116,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object setNotReady(RoutingContext ctx) {
         LOGGER.info("setNotReady");
-        String id = ctx.request().getParam("gameId");
+        String id = ctx.request().getParam(GAME_ID);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Game game = alhambra.findGame(id);
         game.setPlayerNotReady(token);
@@ -123,7 +125,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object takeMoney(RoutingContext ctx) {
         LOGGER.info("takeMoney");
-        String gameId = ctx.request().getParam("gameId");
+        String gameId = ctx.request().getParam(GAME_ID);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         String body = ctx.getBodyAsString();
         Coin[] coins = Json.decodeValue(body, Coin[].class);
@@ -134,7 +136,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object buyBuilding(RoutingContext ctx) {
         LOGGER.info("buyBuilding");
-        String gameId = ctx.request().getParam("gameId");
+        String gameId = ctx.request().getParam(GAME_ID);
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
@@ -155,11 +157,11 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object getGame(RoutingContext ctx) {
         LOGGER.info("getGame");
-        String gameId = ctx.request().getParam("gameId");
+        String gameId = ctx.request().getParam(GAME_ID);
         Game gameToFind = alhambra.findGame(gameId);
 
         return new JsonObject()
-                .put("gameId",gameToFind.getGameId())
+                .put(GAME_ID,gameToFind.getGameId())
                 .put("players", gameToFind.getPlayers())
                 .put("started", gameToFind.getStarted())
                 .put("ended", gameToFind.getEnded())

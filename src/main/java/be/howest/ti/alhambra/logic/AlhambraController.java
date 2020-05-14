@@ -1,6 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
