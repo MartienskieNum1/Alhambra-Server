@@ -14,7 +14,7 @@ class AlhambraTest {
         }
         alhambra.clearGames();
 
-        assertEquals(0, alhambra.games.size());
+        assertEquals(0, alhambra.getGames().size());
     }
 
     @Test
@@ -24,6 +24,6 @@ class AlhambraTest {
             alhambra.addGame("group27");
         }
 
-        assertEquals(5, alhambra.games.size());
+        assertEquals(5, alhambra.getGames().size());
     }
 }
