@@ -14,7 +14,7 @@ class GameTest {
         Player player1 = new Player("maarten");
         Player player2 = new Player("jos");
         Player player3 = new Player("Jef");
-        alhambra.addGame(); //group27-000
+        alhambra.addGame("group27"); //group27-000
         Game myGame = alhambra.findGame("group27-000");
 
         myGame.addPlayer("group27-000+maarten", player1);
