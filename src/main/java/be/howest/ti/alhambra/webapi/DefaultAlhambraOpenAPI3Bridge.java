@@ -23,7 +23,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public boolean verifyAdminToken(String password) {
-        String adminPassword = "-HhpQgVw9*";
+        String adminPassword = "Bedroefd";
         return adminPassword.equals(password);
     }
 
@@ -57,8 +57,9 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     }
 
     public Object getScoringTable(RoutingContext ctx) {
-        LOGGER.info("getScoringTable");
-        return null;
+        int round = Integer.parseInt(ctx.request().getParam("round"));
+
+        return controller.getScoringTable(round);
     }
 
     public Object getGames(RoutingContext ctx) {

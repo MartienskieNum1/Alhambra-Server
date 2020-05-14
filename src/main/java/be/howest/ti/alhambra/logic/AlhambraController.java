@@ -2,6 +2,7 @@ package be.howest.ti.alhambra.logic;
 
 import io.vertx.core.json.Json;
 import java.util.List;
+import java.util.Map;
 
 public class AlhambraController {
 
@@ -29,4 +30,13 @@ public class AlhambraController {
         return null;
     }
 
+    public Map getScoringTable(int round) {
+        if (round == 1){
+            return new ScoringTable().makeRound1();
+        }
+        if (round == 2){
+            return new ScoringTable().makeRound2();
+        }
+        else {return new ScoringTable().makeRound3();}
+    }
 }
