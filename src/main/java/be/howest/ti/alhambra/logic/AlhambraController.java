@@ -2,11 +2,16 @@ package be.howest.ti.alhambra.logic;
 
 import io.vertx.core.json.JsonObject;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class AlhambraController {
+
+    public static final String WALLS = "walls";
+    public static final String STARTED = "started";
+    public static final String PLAYERS = "players";
 
     public Currency[] getCurrencies() {
         return Currency.values();
@@ -37,12 +42,11 @@ public class AlhambraController {
         if (Boolean.parseBoolean(details)) {
             for (Map.Entry<String, Game> entry : allGames.entrySet()) {
                 Game game = entry.getValue();
-                String gameId = entry.getKey();
-                if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
+                if (Boolean.FALSE.equals(game.getStarted() && game.getGroupNr().equals(prefix))) {
                     listOfGamesDetailed.add(new JsonObject()
                             .put("gameId",game.getGameId())
-                            .put("players", game.getPlayersList())
-                            .put("started", game.getStarted())
+                            .put(PLAYERS, game.getPlayersList())
+                            .put(STARTED, game.getStarted())
                             .put("ended", game.getEnded())
                             .put("playerCount", game.getPlayerCount())
                             .put("readyCount", game.getReadyCount()));
@@ -52,14 +56,14 @@ public class AlhambraController {
         } else {
             for (Map.Entry<String, Game> entry : allGames.entrySet()) {
                 Game game = entry.getValue();
-                if (!game.getStarted() && game.getGroupNr().equals(prefix)) {
+                if (Boolean.FALSE.equals(game.getStarted() && game.getGroupNr().equals(prefix))) {
                     listOfGamesInfo.add(game.getGameId());
                 }
             }
         }
         return listOfGamesInfo;
     }
-    public Map getScoringTable(int round) {
+    public Map<BuildingType, List<Integer>> getScoringTable(int round) {
         if (round == 1){
             return new ScoringTable().makeRound1();
         }
@@ -67,5 +71,114 @@ public class AlhambraController {
             return new ScoringTable().makeRound2();
         }
         else {return new ScoringTable().makeRound3();}
+    }
+
+    private JsonObject getBasicGameInfo(String gameId, Alhambra game) {
+        Game gameToFind = game.findGame(gameId);
+        List<String> playerUsernames = new LinkedList<>();
+
+        for (Player player : gameToFind.getPlayersList()) {
+            playerUsernames.add(player.getUsername());
+        }
+
+        return new JsonObject()
+                .put("gameId",gameToFind.getGameId())
+                .put(PLAYERS, playerUsernames)
+                .put(STARTED, gameToFind.getStarted())
+                .put("playerCount", gameToFind.getPlayerCount())
+                .put("readyCount", gameToFind.getReadyCount());
+    }
+
+    private JsonObject playerInfo(Player player){
+        List<JsonObject> reserve = new LinkedList<>();
+        List<JsonObject> buildingsInHand = new LinkedList<>();
+        List<JsonObject> city = Collections.emptyList(); //placeholder
+        List<JsonObject> coins = new LinkedList<>();
+
+        for (Building building : player.getReserve()) {
+            JsonObject walls = new JsonObject();
+            for (Map.Entry<String, Boolean> entry1 : building.getWalls().entrySet()) {
+                walls.put(entry1.getKey(), entry1.getValue());
+            }
+            JsonObject json = new JsonObject();
+            json.put("type", building.getBuildingType())
+                    .put("cost", building.getCost())
+                    .put(WALLS, walls);
+        }
+
+        for (Building building : player.getBuildingsInHand()) {
+            JsonObject walls = new JsonObject();
+            for (Map.Entry<String, Boolean> entry1 : building.getWalls().entrySet()) {
+                walls.put(entry1.getKey(), entry1.getValue());
+            }
+            JsonObject json = new JsonObject();
+            json.put("type", building.getBuildingType().toString())
+                    .put("cost", building.getCost())
+                    .put(WALLS, walls);
+        }
+
+        for (Coin coin : player.getCoins()) {
+            JsonObject json = new JsonObject();
+            json.put("currency", coin.getCurrency())
+                    .put("amount", coin.getAmount());
+        }
+
+        return new JsonObject()
+                .put("name", player.getUsername())
+                .put("coins", coins)
+                .put("reserve", reserve)
+                .put("buildings-in-hand", buildingsInHand)
+                .put("city", city)
+                .put("virtual-score", player.getVirtualScore())
+                .put("score", player.getScore());
+    }
+
+    public JsonObject getGameInfo(String gameId, Alhambra game) {
+        Game gameToFind = game.findGame(gameId);
+
+        if (Boolean.TRUE.equals(gameToFind.getStarted())) {
+            return getDetailedGameInfo(gameId, game);
+        }else {
+            return getBasicGameInfo(gameId, game);
+
+        }
+    }
+
+    public JsonObject getDetailedGameInfo(String gameId, Alhambra game){
+        Game gameToFind = game.findGame(gameId);
+        List<JsonObject> playerInfo = new LinkedList<>();
+        List<JsonObject> bank = new LinkedList<>();
+        JsonObject market = new JsonObject();
+
+        for (Coin coin : gameToFind.getBank()) {
+            JsonObject json = new JsonObject();
+            json.put("currency", coin.getCurrency().toString())
+                    .put("amount", coin.getAmount());
+            bank.add(json);
+        }
+
+        for (Map.Entry<Currency, Building> entry : gameToFind.getMarket().entrySet()) {
+            JsonObject walls = new JsonObject();
+            for (Map.Entry<String, Boolean> entry1 : entry.getValue().getWalls().entrySet()) {
+                walls.put(entry1.getKey(), entry1.getValue());
+            }
+            JsonObject building = new JsonObject()
+                    .put("type", entry.getValue().getBuildingType().toString() )
+                    .put("cost", entry.getValue().getCost())
+                    .put(WALLS, walls);
+            market.put(entry.getKey().toString(), building);
+        }
+
+        for (Player player : gameToFind.getPlayersList()) {
+            playerInfo.add(playerInfo(player));
+        }
+
+        return new JsonObject()
+                .put("bank", bank)
+                .put("market", market)
+                .put(PLAYERS, playerInfo)
+                .put(STARTED, gameToFind.getStarted())
+                .put("ended", gameToFind.getEnded())
+                .put("currentPlayer", gameToFind.getCurrentPlayer().getUsername());
     }
 }

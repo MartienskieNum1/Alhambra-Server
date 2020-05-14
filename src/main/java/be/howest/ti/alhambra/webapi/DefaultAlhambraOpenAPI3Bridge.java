@@ -160,14 +160,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public Object getGame(RoutingContext ctx) {
         LOGGER.info("getGame");
         String gameId = ctx.request().getParam(GAME_ID);
-        Game gameToFind = alhambra.findGame(gameId);
 
-        return new JsonObject()
-                .put(GAME_ID,gameToFind.getGameId())
-                .put("players", gameToFind.getPlayers())
-                .put("started", gameToFind.getStarted())
-                .put("ended", gameToFind.getEnded())
-                .put("playerCount", gameToFind.getPlayerCount())
-                .put("readyCount", gameToFind.getReadyCount());
+        return controller.getGameInfo(gameId, alhambra);
     }
 }
