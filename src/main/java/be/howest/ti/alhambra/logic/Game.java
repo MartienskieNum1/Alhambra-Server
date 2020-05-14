@@ -48,7 +48,7 @@ public class Game {
         }
     }
 
-    private void nextTurn() {
+    public void nextTurn() {
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
     }
