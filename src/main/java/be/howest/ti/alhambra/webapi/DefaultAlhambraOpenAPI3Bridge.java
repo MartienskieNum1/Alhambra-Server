@@ -9,7 +9,6 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -132,18 +131,14 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object buyBuilding(RoutingContext ctx) {
         LOGGER.info("buyBuilding");
-        return null;
-        /*
         String gameId = ctx.request().getParam("gameId");
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        String body = ctx.getBodyAsString();
-        Coin[] coins = Json.decodeValue(body, Coin[].class);
-        Currency currency = Json.decodeValue(body, Currency.class);
+        Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
+        Currency currency = Currency.valueOf(ctx.getBodyAsJson().getString("currency").toUpperCase());
         game.buyBuilding(token, Arrays.asList(coins), currency);
-        return null;*/
+        return null;
     }
-
 
     public Object redesign(RoutingContext ctx) {
         LOGGER.info("redesign");
