@@ -164,6 +164,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object buyBuilding(RoutingContext ctx) {
         LOGGER.info("buyBuilding");
+        return null;
+        /*
         String gameId = ctx.request().getParam("gameId");
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
@@ -171,7 +173,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Currency currency = Json.decodeValue(body, Currency.class);
         game.buyBuilding(token, Arrays.asList(coins), currency);
-        return null;
+        return null;*/
     }
 
 
