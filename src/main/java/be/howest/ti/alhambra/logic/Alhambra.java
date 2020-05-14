@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Alhambra {
-    public List<Game> games = new LinkedList<>();
+    private List<Game> games = new LinkedList<>();
 
     private int getCounter(String groupNr){
         int counter = 0;
