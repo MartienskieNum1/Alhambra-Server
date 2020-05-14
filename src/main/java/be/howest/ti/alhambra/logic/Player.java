@@ -44,6 +44,10 @@ public class Player {
         return virtualScore;
     }
 
+    public boolean isReady() {
+        return ready;
+    }
+
     public List<Coin> getCoins() {
         return coins;
     }

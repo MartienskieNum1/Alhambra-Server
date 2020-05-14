@@ -1,14 +1,16 @@
 package be.howest.ti.alhambra.logic;
 
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Alhambra {
-    private List<Game> games = new LinkedList<>();
+    private Map<String, Game> games = new HashMap<>();
 
     private int getCounter(String groupNr){
         int counter = 0;
-        for (Game game : games){
+        for (Map.Entry<String, Game>  entry : games.entrySet()){
+            Game game = entry.getValue();
             if (game.getGroupNr().equals(groupNr)){
                 counter++;
             }
@@ -31,25 +33,15 @@ public class Alhambra {
         }
 
         Game newlyMadeGame = new Game(gameId, groupNr);
-        games.add(newlyMadeGame);
+        games.put(gameId, newlyMadeGame);
         return newlyMadeGame;
     }
 
-    public void removeGame(Game gameToRemove){
-        games.removeIf(game -> game.getGameId().equals(gameToRemove.getGameId()));
-    }
-
     public Game findGame(String gameToFind){
-        Game matchingGame = null;
-        for (Game game : games){
-            if (game.getGameId().equals(gameToFind)){
-                matchingGame = game;
-            }
-        }
-        return matchingGame;
+        return games.get(gameToFind);
     }
 
-    public List<Game> getGames() {
+    public Map<String,Game> getGames() {
         return games;
     }
 }
