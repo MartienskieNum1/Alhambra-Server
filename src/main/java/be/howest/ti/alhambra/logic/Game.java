@@ -20,6 +20,7 @@ public class Game {
     private Random rand = new Random();
     private List<Coin> remainingCoins = Coin.allCoins();
     private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
+    private Deque<Player> playerOrder = new LinkedList<>();
 
     public Game(String gameId, String groupNr) {
         this.market = new HashMap<>();
@@ -41,14 +42,21 @@ public class Game {
         playerCount++;
     }
 
-    public void checkIfGameMeetsRequirements(){
+    private void checkIfGameMeetsRequirements(){
         if (playerCount >= 2 && readyCount == playerCount){
             startGame();
         }
     }
 
+    private void nextTurn() {
+        currentPlayer = playerOrder.pollFirst();
+        playerOrder.addLast(currentPlayer);
+    }
+
     public void startGame() {
-        currentPlayer = getPlayersList().get(0);
+        playerOrder.addAll(getPlayersList());
+        currentPlayer = playerOrder.pollFirst();
+        playerOrder.addLast(currentPlayer);
 
         for (int i = 0; i < 4; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
@@ -135,7 +143,7 @@ public class Game {
         }
     }
 
-    public boolean checkIfCurrentPlayersTurn(Player player) {
+    private boolean checkIfCurrentPlayersTurn(Player player) {
         return player.equals(getCurrentPlayer());
     }
 
@@ -152,5 +160,6 @@ public class Game {
         else {
             throw new IllegalArgumentException("It's not your turn!");
         }
+        nextTurn();
     }
 }
