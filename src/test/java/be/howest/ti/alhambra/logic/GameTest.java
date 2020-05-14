@@ -36,6 +36,10 @@ class GameTest {
 
     @Test
     void setPlayerNotReady() {
+        myGame.setPlayerReady("group27-000+maarten");
+        assertTrue(player1.isReady());
+        myGame.setPlayerNotReady("group27-000+maarten");
+        assertFalse(player1.isReady());
     }
 
     @Test
