@@ -23,6 +23,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         this.controller = new AlhambraController();
     }
 
+    @SuppressWarnings("squid:S2068")
     public boolean verifyAdminToken(String password) {
         String adminPassword = "-HhpQgVw9*";
         return adminPassword.equals(password);
