@@ -1,11 +1,13 @@
 package be.howest.ti.alhambra.logic;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Alhambra {
-    public List<Game> games = new LinkedList<>();
+    public Map<String, Game> games = new HashMap<>();
     private final String groupNr = "group27";
     private int gameIdCounter = 0;
     private String gameId = "";
@@ -24,22 +26,17 @@ public class Alhambra {
         }
 
         Game newlyMadeGame = new Game(gameId, groupNr);
-        games.add(newlyMadeGame);
+        games.put(gameId, newlyMadeGame);
         gameIdCounter += 1;
         return newlyMadeGame;
     }
 
     public Game findGame(String gameToFind){
-        Game matchingGame = null;
-        for (Game game : games){
-            if (game.getGameId().equals(gameToFind)){
-                matchingGame = game;
-            }
-        }
+        Game matchingGame = games.get(gameToFind);
         return matchingGame;
     }
 
-    public List<Game> getGames() {
+    public Map<String,Game> getGames() {
         return games;
     }
 }
