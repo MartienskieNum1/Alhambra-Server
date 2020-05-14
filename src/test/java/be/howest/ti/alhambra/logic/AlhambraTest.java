@@ -10,7 +10,7 @@ class AlhambraTest {
     void clearGames() {
         Alhambra alhambra = new Alhambra();
         for (int i=0; i<5; i++){
-            alhambra.addGame();
+            alhambra.addGame("group27");
         }
         alhambra.clearGames();
 
@@ -21,7 +21,7 @@ class AlhambraTest {
     void addGame() {
         Alhambra alhambra = new Alhambra();
         for (int i=0; i<5; i++){
-            alhambra.addGame();
+            alhambra.addGame("group27");
         }
 
         assertEquals(5, alhambra.games.size());
