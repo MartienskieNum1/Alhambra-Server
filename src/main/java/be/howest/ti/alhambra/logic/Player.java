@@ -18,7 +18,7 @@ public class Player {
     private List<Coin> coins;
     private List<Building> reserve;
     private List<Building> buildingsInHand;
-    private List<Building> city;
+    private List<List<Building>> city;
 
     @JsonCreator
     public Player(@JsonProperty("playerName") String username) {
@@ -60,7 +60,7 @@ public class Player {
         return buildingsInHand;
     }
 
-    public List<Building> getCity() {
+    public List<List<Building>> getCity() {
         return city;
     }
 
@@ -77,6 +77,14 @@ public class Player {
             this.coins.removeIf(coin::equals);
         }
         buildingsInHand.add(building);
+    }
+
+    public void addBaseToCity() {
+        List<Building> basicList = new LinkedList<>();
+        Building fountain = new Building(null, 0);
+        fountain.putWallOnBuilding(false, false, false, false);
+        basicList.add(fountain);
+        city.add(basicList);
     }
 
     @Override
