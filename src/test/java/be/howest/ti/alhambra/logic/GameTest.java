@@ -57,6 +57,15 @@ class GameTest {
         for (Coin coin: myGame.getBank()) {
             assertNotNull(coin);
         }
+
+        int totalValue = 0;
+        for (Player player : myGame.getPlayersList()) {
+            for (Coin coin : player.getCoins()) {
+                totalValue += coin.getAmount();
+            }
+        }
+
+        assertTrue(totalValue >= 20);
     }
 
     @Test

@@ -72,6 +72,18 @@ public class Game {
             return newBuilding;
         });
 
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
+            Player player = entry.getValue();
+            int totalValue = 0;
+            while (totalValue < 20) {
+                int randCoinInt = rand.nextInt(remainingCoins.size());
+                Coin coinToAdd = remainingCoins.get(randCoinInt);
+                remainingCoins.remove(randCoinInt);
+                player.addCoinToWallet(coinToAdd);
+                totalValue += coinToAdd.getAmount();
+            }
+        }
+
         started = true;
     }
 

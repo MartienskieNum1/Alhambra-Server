@@ -104,6 +104,7 @@ public class AlhambraController {
             json.put("type", building.getBuildingType())
                     .put("cost", building.getCost())
                     .put(WALLS, walls);
+            reserve.add(json);
         }
 
         for (Building building : player.getBuildingsInHand()) {
@@ -115,12 +116,14 @@ public class AlhambraController {
             json.put("type", building.getBuildingType().toString())
                     .put("cost", building.getCost())
                     .put(WALLS, walls);
+            buildingsInHand.add(json);
         }
 
         for (Coin coin : player.getCoins()) {
             JsonObject json = new JsonObject();
-            json.put("currency", coin.getCurrency())
+            json.put("currency", coin.getCurrency().toString())
                     .put("amount", coin.getAmount());
+            coins.add(json);
         }
 
         return new JsonObject()
