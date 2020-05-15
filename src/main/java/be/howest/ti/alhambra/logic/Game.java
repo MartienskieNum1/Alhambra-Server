@@ -14,6 +14,7 @@ public class Game {
     private Player currentPlayer;
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
+    private List<Boolean> areAllCoinsInBank = new LinkedList<>();
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
@@ -148,15 +149,19 @@ public class Game {
     }
 
     public void giveMoney(String token,Coin[] coins) {
-        boolean areAllCoinsInBank = true;
+
+        for (int k = 0 ; k < coins.length; k ++){
+            areAllCoinsInBank.add(false);
+        }
         for (int i = 0; i < coins.length;i ++){
             for (int j = 0; j < bank.length; j ++){
-                if (!bank[j].equals(coins[i])) {
-                    areAllCoinsInBank = false;
+                if (bank[j].equals(coins[i])) {
+                    areAllCoinsInBank.set(i, true);
+                    j = bank.length + 1;
                 }
             }
         }
-        if (areAllCoinsInBank && players.get(token).equals(getCurrentPlayer())){
+        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())){
             for (Coin coin : coins) {
                 players.get(token).addCoinToWallet(coin);
                 for (int j = 0; j < bank.length; j ++){
@@ -166,6 +171,11 @@ public class Game {
                 }
             }
         }
+    }
+
+    public boolean checkIfAllCoinsAreInTheBank(List<Boolean> list){
+        return list.isEmpty() || list.stream()
+                .allMatch(list.get(0)::equals);
     }
 
     private boolean checkIfCurrentPlayersTurn(Player player) {

@@ -133,6 +133,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Game game = alhambra.findGame(gameId);
         game.giveMoney(token, coins);
+        game.nextTurn();
         return null;
     }
 
