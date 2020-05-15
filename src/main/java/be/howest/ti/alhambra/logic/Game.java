@@ -148,17 +148,24 @@ public class Game {
     }
 
     public void giveMoney(String token,Coin[] coins) {
-
+        boolean areAllCoinsInBank = true;
         for (int i = 0; i < coins.length;i ++){
             for (int j = 0; j < bank.length; j ++){
-                if (bank[j].equals(coins[i]) && players.get(token).equals(getCurrentPlayer())) {
-                    for (Coin coin : coins) {
-                        players.get(token).addCoinToWallet(coin);
+                if (!bank[j].equals(coins[i])) {
+                    areAllCoinsInBank = false;
+                }
+            }
+        }
+        if (areAllCoinsInBank && players.get(token).equals(getCurrentPlayer())){
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+                for (int j = 0; j < bank.length; j ++){
+                    if (bank[j].equals(coin)) {
+                        bank[j] = null;
                     }
                 }
             }
         }
-
     }
 
     private boolean checkIfCurrentPlayersTurn(Player player) {
