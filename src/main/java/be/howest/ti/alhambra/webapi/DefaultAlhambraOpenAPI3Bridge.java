@@ -132,7 +132,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String body = ctx.getBodyAsString();
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Game game = alhambra.findGame(gameId);
-        game.addCoin(token, coins);
+        game.giveMoney(token, coins);
         return null;
     }
 

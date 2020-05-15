@@ -58,7 +58,7 @@ public class Game {
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < bank.length; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             bank[i] = randCoin;
@@ -147,12 +147,18 @@ public class Game {
         checkIfGameMeetsRequirements();
     }
 
-    public void addCoin(String token,Coin[] coins) {
-        if (players.get(token).equals(getCurrentPlayer())) {
-            for (Coin coin : coins) {
-                players.get(token).addCoinToWallet(coin);
+    public void giveMoney(String token,Coin[] coins) {
+
+        for (int i = 0; i < coins.length;i ++){
+            for (int j = 0; j < bank.length; j ++){
+                if (bank[j].equals(coins[i]) && players.get(token).equals(getCurrentPlayer())) {
+                    for (Coin coin : coins) {
+                        players.get(token).addCoinToWallet(coin);
+                    }
+                }
             }
         }
+
     }
 
     private boolean checkIfCurrentPlayersTurn(Player player) {
