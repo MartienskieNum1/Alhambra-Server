@@ -74,6 +74,7 @@ public class Game {
 
         for (Map.Entry<String, Player> entry : players.entrySet()) {
             Player player = entry.getValue();
+            player.addBaseToCity();
             int totalValue = 0;
             while (totalValue < 20) {
                 int randCoinInt = rand.nextInt(remainingCoins.size());
