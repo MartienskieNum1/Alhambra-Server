@@ -173,10 +173,10 @@ public class Game {
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
             player.buyBuilding(building, coins);
+            nextTurn();
         }
         else {
             throw new IllegalArgumentException("It's not your turn!");
         }
-        nextTurn();
     }
 }
