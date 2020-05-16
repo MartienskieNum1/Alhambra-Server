@@ -11,7 +11,6 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.Arrays;
 import java.util.Map;
 
-
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAlhambraOpenAPI3Bridge.class);
@@ -131,7 +130,8 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String body = ctx.getBodyAsString();
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Game game = alhambra.findGame(gameId);
-        game.addCoin(token, coins);
+        game.giveMoney(token, coins);
+        game.nextTurn();
         return null;
     }
 

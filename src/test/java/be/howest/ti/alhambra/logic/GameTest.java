@@ -14,7 +14,7 @@ class GameTest {
     Alhambra alhambra = new Alhambra();
     Game myGame;
     Player player1 = new Player("maarten");
-    Player player2 = new Player("jos");
+    Player player2 = new Player("niels");
     Player player3 = new Player("Jef");
 
     @BeforeEach
@@ -81,5 +81,13 @@ class GameTest {
         assertEquals(player3, myGame.getCurrentPlayer());
         myGame.nextTurn();
         assertEquals(player2, myGame.getCurrentPlayer());
+    }
+
+    @Test
+    void takeMonetTest(){
+        startGame();
+
+        Player currentPlayer = myGame.getCurrentPlayer();
+
     }
 }
