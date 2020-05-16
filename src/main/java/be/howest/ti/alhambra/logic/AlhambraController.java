@@ -121,15 +121,19 @@ public class AlhambraController {
         for (List<Building> list : player.getCity()) {
             List<JsonObject> jsonList = new LinkedList<>();
             for (Building building : list) {
-                JsonObject walls = new JsonObject();
-                for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
-                    walls.put(entry.getKey(), entry.getValue());
+                if (building == null) {
+                    jsonList.add(null);
+                } else {
+                    JsonObject walls = new JsonObject();
+                    for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
+                        walls.put(entry.getKey(), entry.getValue());
+                    }
+                    String type = (building.getBuildingType() != null) ? building.getBuildingType().toString() : null;
+                    jsonList.add(new JsonObject()
+                            .put("type", type)
+                            .put("cost", building.getCost())
+                            .put(WALLS, walls));
                 }
-                String type = (building.getBuildingType() != null) ? building.getBuildingType().toString() : null;
-                jsonList.add(new JsonObject()
-                        .put("type", type)
-                        .put("cost", building.getCost())
-                        .put(WALLS, walls));
             }
             city.add(jsonList);
         }
