@@ -42,6 +42,8 @@ public class Game {
         playerCount++;
     }
 
+
+
     private void checkIfGameMeetsRequirements(){
         if (playerCount >= 2 && readyCount == playerCount){
             startGame();
@@ -49,6 +51,15 @@ public class Game {
     }
 
     public void nextTurn() {
+        for (int i = 0; i<4; i++){
+            int randCoinInt = rand.nextInt(remainingCoins.size());
+            Coin randCoin = remainingCoins.get(randCoinInt);
+            if (bank[i]==null){
+                bank[i] = randCoin;
+                remainingCoins.remove(randCoinInt);
+            }
+        }
+
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
     }
