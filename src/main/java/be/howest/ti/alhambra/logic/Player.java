@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @JsonIgnoreProperties(value = {"coins", "reserve", "buildingsInHand","city"})
 public class Player {
@@ -18,7 +16,7 @@ public class Player {
     private List<Coin> coins;
     private List<Building> reserve;
     private List<Building> buildingsInHand;
-    private List<List<Building>> city;
+    private LinkedList<LinkedList<Building>> city;
 
     @JsonCreator
     public Player(@JsonProperty("playerName") String username) {
@@ -60,7 +58,7 @@ public class Player {
         return buildingsInHand;
     }
 
-    public List<List<Building>> getCity() {
+    public LinkedList<LinkedList<Building>> getCity() {
         return city;
     }
 
@@ -72,7 +70,7 @@ public class Player {
         coins.add(coin);
     }
 
-    public void addBuilding(Building building, List<Coin> coins) {
+    public void buyBuilding(Building building, List<Coin> coins) {
         for(Coin coin : coins) {
             this.coins.removeIf(coin::equals);
         }
@@ -80,11 +78,43 @@ public class Player {
     }
 
     public void addBaseToCity() {
-        List<Building> basicList = new LinkedList<>();
+        LinkedList<Building> basicList = new LinkedList<>();
         Building fountain = new Building(null, 0);
         fountain.putWallOnBuilding(false, false, false, false);
         basicList.add(fountain);
         city.add(basicList);
+    }
+
+    public void buildBuilding(Building building, int row, int col) {
+        if (city.size()/2 < Math.abs(row) || city.size()/2 < Math.abs(col)) {
+            LinkedList<Building> initList1 = new LinkedList<>();
+            initList1.add(null);
+            LinkedList<Building> initList2 = new LinkedList<>();
+            initList2.add(null);
+            city.addFirst(initList1);
+            city.addLast(initList2);
+            for (LinkedList<Building> cityRow : city) {
+                while (cityRow.size() < city.size()) {
+                    cityRow.addFirst(null);
+                    cityRow.addLast(null);
+                }
+            }
+        }
+
+        row = (city.size() / 2) + row;
+        col = (city.size() / 2) + col;
+
+        for (int cityRow = 0; cityRow < city.size(); cityRow++) {
+            for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
+                if (cityRow == row && cityCol == col) {
+                    city.get(cityRow).set(cityCol, building);
+                }
+            }
+        }
+    }
+
+    public void placeInReserve(Building building) {
+        //
     }
 
     @Override
