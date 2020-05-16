@@ -1,7 +1,6 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.*;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
