@@ -86,28 +86,32 @@ public class Player {
     }
 
     public void buildBuilding(Building building, int row, int col) {
-        if (city.size()/2 < Math.abs(row) || city.size()/2 < Math.abs(col)) {
-            LinkedList<Building> initList1 = new LinkedList<>();
-            initList1.add(null);
-            LinkedList<Building> initList2 = new LinkedList<>();
-            initList2.add(null);
-            city.addFirst(initList1);
-            city.addLast(initList2);
-            for (LinkedList<Building> cityRow : city) {
-                while (cityRow.size() < city.size()) {
-                    cityRow.addFirst(null);
-                    cityRow.addLast(null);
+        for (Building buildingInHand : buildingsInHand) {
+            if (building.equals(buildingInHand)) {
+                if (city.size()/2 < Math.abs(row) || city.size()/2 < Math.abs(col)) {
+                    LinkedList<Building> initList1 = new LinkedList<>();
+                    initList1.add(null);
+                    LinkedList<Building> initList2 = new LinkedList<>();
+                    initList2.add(null);
+                    city.addFirst(initList1);
+                    city.addLast(initList2);
+                    for (LinkedList<Building> cityRow : city) {
+                        while (cityRow.size() < city.size()) {
+                            cityRow.addFirst(null);
+                            cityRow.addLast(null);
+                        }
+                    }
                 }
-            }
-        }
 
-        row = (city.size() / 2) + row;
-        col = (city.size() / 2) + col;
+                row = (city.size() / 2) + row;
+                col = (city.size() / 2) + col;
 
-        for (int cityRow = 0; cityRow < city.size(); cityRow++) {
-            for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
-                if (cityRow == row && cityCol == col) {
-                    city.get(cityRow).set(cityCol, building);
+                for (int cityRow = 0; cityRow < city.size(); cityRow++) {
+                    for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
+                        if (cityRow == row && cityCol == col) {
+                            city.get(cityRow).set(cityCol, building);
+                        }
+                    }
                 }
             }
         }
