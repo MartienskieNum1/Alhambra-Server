@@ -113,12 +113,19 @@ public class Player {
                         }
                     }
                 }
+                buildingsInHand.remove(building);
             }
         }
     }
 
     public void placeInReserve(Building building) {
-        //
+        for (Building buildingInHand : buildingsInHand) {
+            if (building.equals(buildingInHand)) {
+                reserve.add(building);
+                buildingsInHand.remove(building);
+            }
+
+        }
     }
 
     @Override
