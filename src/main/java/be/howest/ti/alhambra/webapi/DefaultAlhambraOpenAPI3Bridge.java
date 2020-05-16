@@ -166,8 +166,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         } else {
             game.findPlayer(token).placeInReserve(building);
         }
-
-
+        game.nextTurn();
         return null;
     }
 
