@@ -154,27 +154,33 @@ public class Game {
     }
 
     public void giveMoney(String token, Coin[] coins) {
-
-        for (int k = 0 ; k < coins.length; k ++){
-            areAllCoinsInBank.add(false);
-        }
-        for (int i = 0; i < coins.length;i ++){
-            for (int j = 0; j < bank.length; j ++){
-                if (bank[j].equals(coins[i])) {
-                    areAllCoinsInBank.set(i, true);
-                    j = bank.length + 1;
-                }
+        if (checkIfCurrentPlayersTurn(players.get(token))) {
+            for (int k = 0 ; k < coins.length; k ++){
+                areAllCoinsInBank.add(false);
             }
-        }
-        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())){
-            for (Coin coin : coins) {
-                players.get(token).addCoinToWallet(coin);
+            for (int i = 0; i < coins.length;i ++){
                 for (int j = 0; j < bank.length; j ++){
-                    if (bank[j].equals(coin)) {
-                        bank[j] = null;
+                    if (bank[j].equals(coins[i])) {
+                        areAllCoinsInBank.set(i, true);
+                        j = bank.length + 1;
                     }
                 }
             }
+            if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
+                for (Coin coin : coins) {
+                    players.get(token).addCoinToWallet(coin);
+                    for (int j = 0; j < bank.length; j ++){
+                        if (bank[j].equals(coin)) {
+                            bank[j] = null;
+                        }
+                    }
+                }
+                nextTurn();
+            } else {
+                throw new IllegalArgumentException("Not all your money exists!");
+            }
+        } else {
+            throw new IllegalArgumentException("It's not your turn!");
         }
     }
 
