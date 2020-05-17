@@ -75,6 +75,7 @@ public class Game {
 
         for (Map.Entry<String, Player> entry : players.entrySet()) {
             Player player = entry.getValue();
+            player.addBaseToCity();
             int totalValue = 0;
             while (totalValue < 20) {
                 int randCoinInt = rand.nextInt(remainingCoins.size());
@@ -86,6 +87,10 @@ public class Game {
         }
 
         started = true;
+    }
+
+    public Player findPlayer(String token) {
+        return players.get(token);
     }
 
     public String getGameId() {
@@ -148,28 +153,34 @@ public class Game {
         checkIfGameMeetsRequirements();
     }
 
-    public void giveMoney(String token,Coin[] coins) {
-
-        for (int k = 0 ; k < coins.length; k ++){
-            areAllCoinsInBank.add(false);
-        }
-        for (int i = 0; i < coins.length;i ++){
-            for (int j = 0; j < bank.length; j ++){
-                if (bank[j].equals(coins[i])) {
-                    areAllCoinsInBank.set(i, true);
-                    j = bank.length + 1;
-                }
+    public void giveMoney(String token, Coin[] coins) {
+        if (checkIfCurrentPlayersTurn(players.get(token))) {
+            for (int k = 0 ; k < coins.length; k ++){
+                areAllCoinsInBank.add(false);
             }
-        }
-        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())){
-            for (Coin coin : coins) {
-                players.get(token).addCoinToWallet(coin);
+            for (int i = 0; i < coins.length;i ++){
                 for (int j = 0; j < bank.length; j ++){
-                    if (bank[j].equals(coin)) {
-                        bank[j] = null;
+                    if (bank[j].equals(coins[i])) {
+                        areAllCoinsInBank.set(i, true);
+                        j = bank.length + 1;
                     }
                 }
             }
+            if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
+                for (Coin coin : coins) {
+                    players.get(token).addCoinToWallet(coin);
+                    for (int j = 0; j < bank.length; j ++){
+                        if (bank[j].equals(coin)) {
+                            bank[j] = null;
+                        }
+                    }
+                }
+                nextTurn();
+            } else {
+                throw new IllegalArgumentException("Not all your money exists!");
+            }
+        } else {
+            throw new IllegalArgumentException("It's not your turn!");
         }
     }
 
@@ -190,11 +201,11 @@ public class Game {
         remainingBuildings.remove(randBuildingInt);
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
-            player.addBuilding(building, coins);
+            player.buyBuilding(building, coins);
+            nextTurn();
         }
         else {
             throw new IllegalArgumentException("It's not your turn!");
         }
-        nextTurn();
     }
 }

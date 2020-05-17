@@ -131,7 +131,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Game game = alhambra.findGame(gameId);
         game.giveMoney(token, coins);
-        game.nextTurn();
         return null;
     }
 
@@ -141,7 +140,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
-        Currency currency = Currency.valueOf(ctx.getBodyAsJson().getString("currency").toUpperCase());
+        Currency currency = Json.decodeValue(ctx.getBodyAsJson().getString("currency"), Currency.class);
         game.buyBuilding(token, Arrays.asList(coins), currency);
         return null;
     }
@@ -153,6 +152,20 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
     public Object build(RoutingContext ctx) {
         LOGGER.info("build");
+        String gameId = ctx.request().getParam(GAME_ID);
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+        Game game = alhambra.findGame(gameId);
+        JsonObject body = ctx.getBodyAsJson();
+        Building building = Json.decodeValue((body.getJsonObject("building").toString()), Building.class);
+        JsonObject jsonLocation = body.getJsonObject("location");
+        if (jsonLocation != null) {
+            int row = jsonLocation.getInteger("row");
+            int col = jsonLocation.getInteger("col");
+            game.findPlayer(token).buildBuilding(building, row, col);
+        } else {
+            game.findPlayer(token).placeInReserve(building);
+        }
+        game.nextTurn();
         return null;
     }
 

@@ -2,7 +2,6 @@ package be.howest.ti.alhambra.logic;
 
 import io.vertx.core.json.JsonObject;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -92,13 +91,13 @@ public class AlhambraController {
     private JsonObject playerInfo(Player player){
         List<JsonObject> reserve = new LinkedList<>();
         List<JsonObject> buildingsInHand = new LinkedList<>();
-        List<JsonObject> city = Collections.emptyList(); //placeholder
+        List<List<JsonObject>> city = new LinkedList<>(); //placeholder
         List<JsonObject> coins = new LinkedList<>();
 
         for (Building building : player.getReserve()) {
             JsonObject walls = new JsonObject();
-            for (Map.Entry<String, Boolean> entry1 : building.getWalls().entrySet()) {
-                walls.put(entry1.getKey(), entry1.getValue());
+            for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
+                walls.put(entry.getKey(), entry.getValue());
             }
             JsonObject json = new JsonObject();
             json.put("type", building.getBuildingType())
@@ -109,14 +108,34 @@ public class AlhambraController {
 
         for (Building building : player.getBuildingsInHand()) {
             JsonObject walls = new JsonObject();
-            for (Map.Entry<String, Boolean> entry1 : building.getWalls().entrySet()) {
-                walls.put(entry1.getKey(), entry1.getValue());
+            for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
+                walls.put(entry.getKey(), entry.getValue());
             }
             JsonObject json = new JsonObject();
             json.put("type", building.getBuildingType().toString())
                     .put("cost", building.getCost())
                     .put(WALLS, walls);
             buildingsInHand.add(json);
+        }
+
+        for (List<Building> list : player.getCity()) {
+            List<JsonObject> jsonList = new LinkedList<>();
+            for (Building building : list) {
+                if (building == null) {
+                    jsonList.add(null);
+                } else {
+                    JsonObject walls = new JsonObject();
+                    for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
+                        walls.put(entry.getKey(), entry.getValue());
+                    }
+                    String type = (building.getBuildingType() != null) ? building.getBuildingType().toString() : null;
+                    jsonList.add(new JsonObject()
+                            .put("type", type)
+                            .put("cost", building.getCost())
+                            .put(WALLS, walls));
+                }
+            }
+            city.add(jsonList);
         }
 
         for (Coin coin : player.getCoins()) {
