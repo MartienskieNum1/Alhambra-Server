@@ -63,7 +63,8 @@ public class AlhambraController {
         }
         return listOfGamesInfo;
     }
-    public Map<BuildingType, List<Integer>> getScoringTable(int round) {
+
+    public static Map<BuildingType, List<Integer>> getScoringTable(int round) {
         if (round == 1){
             return new ScoringTable().makeRound1();
         }

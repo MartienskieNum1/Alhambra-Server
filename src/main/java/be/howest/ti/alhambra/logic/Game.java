@@ -1,5 +1,8 @@
 package be.howest.ti.alhambra.logic;
 
+import be.howest.ti.alhambra.webapi.DefaultAlhambraOpenAPI3Bridge;
+
+import java.math.BigInteger;
 import java.util.*;
 
 public class Game {
@@ -12,6 +15,7 @@ public class Game {
     private int playerCount;
     private int readyCount;
     private Player currentPlayer;
+    private int roundNr = 1;
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
 
@@ -37,6 +41,13 @@ public class Game {
         this.playerCount = 0;
     }
 
+    public void shuffleRandomScoringRoundsInCoins(){
+        for (int i=0; i < 3; i++){
+            int scoringRound = rand.nextInt(remainingCoins.size());
+            remainingCoins.add(scoringRound, new Coin(Currency.BLUE, 0));
+        }
+    }
+
     public void addPlayer(String token, Player playerToAdd){
         players.put(token, playerToAdd);
         playerCount++;
@@ -55,6 +66,10 @@ public class Game {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
+//                if (randCoin.getAmount()==0){
+//                    AlhambraController.getScoringTable(roundNr);
+//                    roundNr++;
+//                }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
             }
@@ -68,6 +83,8 @@ public class Game {
         playerOrder.addAll(getPlayersList());
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
+
+        shuffleRandomScoringRoundsInCoins();
 
         for (int i = 0; i < 4; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
