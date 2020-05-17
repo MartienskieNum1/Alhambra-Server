@@ -1,7 +1,6 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.*;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -140,8 +139,10 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam(GAME_ID);
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
-        Currency currency = Json.decodeValue(ctx.getBodyAsJson().getString("currency"), Currency.class);
+
+        JsonObject body = ctx.getBodyAsJson();
+        Coin[] coins = Json.decodeValue(body.getJsonArray("coins").toString(), Coin[].class);
+        Currency currency = Currency.valueOf(body.getString("currency"));
         game.buyBuilding(token, Arrays.asList(coins), currency);
         return null;
     }
