@@ -177,17 +177,23 @@ public class Game {
     public void giveMoney(String token, Coin[] coins) {
         List<Boolean> areAllCoinsInBank = new LinkedList<>();
         if (checkIfCurrentPlayersTurn(players.get(token))) {
-            for (int k = 0 ; k < coins.length; k ++){
-                areAllCoinsInBank.add(false);
-            }
-            for (int i = 0; i < coins.length;i ++){
-                for (int j = 0; j < bank.length; j ++){
-                    if (bank[j].equals(coins[i])) {
-                        areAllCoinsInBank.set(i, true);
-                        j = bank.length + 1;
+            if (checkIfPlayerDoesNotTakeToMuch(coins)){
+                for (int k = 0 ; k < coins.length; k ++){
+                    areAllCoinsInBank.add(false);
+                }
+                for (int i = 0; i < coins.length;i ++){
+                    for (int j = 0; j < bank.length; j ++){
+                        if (bank[j].equals(coins[i])) {
+                            areAllCoinsInBank.set(i, true);
+                            j = bank.length + 1;
+                        }
                     }
                 }
             }
+            else {
+                throw new IllegalArgumentException("You took to much money!");
+            }
+
             if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
                 for (Coin coin : coins) {
                     players.get(token).addCoinToWallet(coin);
@@ -203,6 +209,21 @@ public class Game {
             }
         } else {
             throw new IllegalArgumentException("It's not your turn!");
+        }
+    }
+
+
+    public boolean checkIfPlayerDoesNotTakeToMuch(Coin[] coins){
+        if (coins.length > 1){
+            int totalMoneyValue = 0;
+            for (Coin coin: coins){
+                totalMoneyValue += coin.getAmount();
+            }
+
+            return totalMoneyValue <= 5;
+        }
+        else {
+            return true;
         }
     }
 
