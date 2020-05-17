@@ -1,8 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-import be.howest.ti.alhambra.webapi.DefaultAlhambraOpenAPI3Bridge;
-
-import java.math.BigInteger;
 import java.util.*;
 
 public class Game {
@@ -15,10 +12,8 @@ public class Game {
     private int playerCount;
     private int readyCount;
     private Player currentPlayer;
-    private int roundNr = 1;
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
-    private List<Boolean> areAllCoinsInBank = new LinkedList<>();
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
@@ -182,6 +177,7 @@ public class Game {
     }
 
     public void giveMoney(String token, Coin[] coins) {
+        List<Boolean> areAllCoinsInBank = new LinkedList<>();
         if (checkIfCurrentPlayersTurn(players.get(token))) {
             for (int k = 0 ; k < coins.length; k ++){
                 areAllCoinsInBank.add(false);
@@ -198,7 +194,7 @@ public class Game {
                 for (Coin coin : coins) {
                     players.get(token).addCoinToWallet(coin);
                     for (int j = 0; j < bank.length; j ++){
-                        if (bank[j].equals(coin)) {
+                        if (bank[j] == null || bank[j].equals(coin)) {
                             bank[j] = null;
                         }
                     }
