@@ -49,8 +49,6 @@ public class Game {
         playerCount++;
     }
 
-
-
     private void checkIfGameMeetsRequirements(){
         if (playerCount >= 2 && readyCount == playerCount){
             startGame();
@@ -241,13 +239,24 @@ public class Game {
     public void buyBuilding(String token, List<Coin> coins, Currency currency) {
         Building building = market.get(currency);
         int randBuildingInt = rand.nextInt(remainingBuildings.size());
+        int totalAmount = 0;
         Building newBuilding = remainingBuildings.get(randBuildingInt);
         market.replace(currency, newBuilding);
         remainingBuildings.remove(randBuildingInt);
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
             player.buyBuilding(building, coins);
-            nextTurn();
+            for (Coin coin : coins) {
+                totalAmount+= coin.getAmount();
+            }
+            if(building.getCost() == totalAmount) {
+                buyBuilding(token, coins, currency);
+            }
+            else if (building.getCost() < totalAmount) {
+                nextTurn();
+            } else {
+                throw new IllegalArgumentException("You paid not enough!");
+            }
         }
         else {
             throw new IllegalArgumentException("It's not your turn!");
