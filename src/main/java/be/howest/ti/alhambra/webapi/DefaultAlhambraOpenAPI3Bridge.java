@@ -161,13 +161,12 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Building building = Json.decodeValue((body.getJsonObject("building").toString()), Building.class);
         JsonObject jsonLocation = body.getJsonObject("location");
         if (jsonLocation != null) {
-            int row = jsonLocation.getInteger("row");
-            int col = jsonLocation.getInteger("col");
-            game.findPlayer(token).buildBuilding(building, row, col);
+            int row = Integer.parseInt(jsonLocation.getString("row"));
+            int col = Integer.parseInt(jsonLocation.getString("col"));
+            game.buildBuilding(token, building, row, col);
         } else {
-            game.findPlayer(token).placeInReserve(building);
+            game.buildBuilding(token, building, 0, 0);
         }
-        game.nextTurn();
         return null;
     }
 
