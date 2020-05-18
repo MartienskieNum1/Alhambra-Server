@@ -60,10 +60,6 @@ public class Game {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
-//                if (randCoin.getAmount()==0){
-//                    AlhambraController.getScoringTable(roundNr);
-//                    roundNr++;
-//                }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
             }
@@ -245,7 +241,11 @@ public class Game {
         remainingBuildings.remove(randBuildingInt);
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
-            player.buyBuilding(building, coins);
+            for (Coin coin : coins) {
+                if (!player.getCoins().contains(coin)) {
+                    throw new IllegalArgumentException("You don't have this money!");
+                }
+            }
             for (Coin coin : coins) {
                 totalAmount+= coin.getAmount();
             }
@@ -254,6 +254,7 @@ public class Game {
             } else if (building.getCost() > totalAmount) {
                 throw new IllegalArgumentException("You paid not enough!");
             }
+            player.buyBuilding(building, coins);
         } else {
             throw new IllegalArgumentException("It's not your turn!");
         }
