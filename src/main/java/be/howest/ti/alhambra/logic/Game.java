@@ -271,4 +271,14 @@ public class Game {
             throw new IllegalArgumentException("It's not your turn!");
         }
     }
+
+    public void redesign(String token, int row, int col) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            player.redesign(row, col);
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException("It's not your turn!");
+        }
+    }
 }
