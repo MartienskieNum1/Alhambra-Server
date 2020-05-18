@@ -249,12 +249,24 @@ public class Game {
             for (Coin coin : coins) {
                 totalAmount+= coin.getAmount();
             }
-            if (building.getCost() < totalAmount) {
-                nextTurn();
-            } else if (building.getCost() > totalAmount) {
+            if (building.getCost() > totalAmount) {
                 throw new IllegalArgumentException("You paid not enough!");
             }
             player.buyBuilding(building, coins);
+        } else {
+            throw new IllegalArgumentException("It's not your turn!");
+        }
+    }
+
+    public void buildBuilding(String token, Building building, int row, int col) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            if (row == 0 && col == 0) {
+                player.placeInReserve(building);
+            } else {
+                player.buildBuilding(building, row, col);
+            }
+            nextTurn();
         } else {
             throw new IllegalArgumentException("It's not your turn!");
         }
