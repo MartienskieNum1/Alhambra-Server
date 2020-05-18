@@ -11,6 +11,7 @@ public class AlhambraController {
     public static final String WALLS = "walls";
     public static final String STARTED = "started";
     public static final String PLAYERS = "players";
+    private BuildingFactory buildingFactory = new BuildingFactory();
 
     public Currency[] getCurrencies() {
         return Currency.values();
@@ -20,18 +21,17 @@ public class AlhambraController {
         return BuildingType.values();
     }
 
-    private BuildingFactory buildingFactory = new BuildingFactory();
     public List<Building> getBuildings() {
         return buildingFactory.getAllBuildings();
     }
 
-    public String returnPlayerToken(Game game, Player player) {
+    public String getPlayerToken(Game game, Player player) {
         if (game != null) {
             String token = game.getGameId() + "+" + player.getUsername();
             game.addPlayer(token, player);
             return token;
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("There is no game!");
     }
 
     public Object returnListGameDetails(Map<String, Game> allGames, String prefix, String details) {
@@ -90,35 +90,57 @@ public class AlhambraController {
     }
 
     private JsonObject playerInfo(Player player){
-        List<JsonObject> reserve = new LinkedList<>();
-        List<JsonObject> buildingsInHand = new LinkedList<>();
-        List<List<JsonObject>> city = new LinkedList<>(); //placeholder
+        return new JsonObject()
+                .put("name", player.getUsername())
+                .put("coins", getPlayerCoins(player))
+                .put("reserve", getPlayerReserve(player))
+                .put("buildings-in-hand", getBuildingInPlayerHand(player))
+                .put("city", getPlayerCity(player))
+                .put("virtual-score", player.getVirtualScore())
+                .put("score", player.getScore());
+    }
+
+    public List<JsonObject> getPlayerCoins(Player player){
         List<JsonObject> coins = new LinkedList<>();
+        for (Coin coin : player.getCoins()) {
+            JsonObject json = new JsonObject();
+            json.put("currency", coin.getCurrency().toString())
+                    .put("amount", coin.getAmount());
+            coins.add(json);
+        }
+        return coins;
+    }
 
+    public List<JsonObject> getPlayerReserve(Player player){
+        List<JsonObject> reserve = new LinkedList<>();
         for (Building building : player.getReserve()) {
-            JsonObject walls = new JsonObject();
-            for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
-                walls.put(entry.getKey(), entry.getValue());
-            }
-            JsonObject json = new JsonObject();
-            json.put("type", building.getBuildingType())
-                    .put("cost", building.getCost())
-                    .put(WALLS, walls);
-            reserve.add(json);
+            makeBuildingToJson(reserve, building);
         }
+        return reserve;
+    }
 
+    public List<JsonObject> getBuildingInPlayerHand(Player player){
+        List<JsonObject> buildingsInHand = new LinkedList<>();
         for (Building building : player.getBuildingsInHand()) {
-            JsonObject walls = new JsonObject();
-            for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
-                walls.put(entry.getKey(), entry.getValue());
-            }
-            JsonObject json = new JsonObject();
-            json.put("type", building.getBuildingType().toString())
-                    .put("cost", building.getCost())
-                    .put(WALLS, walls);
-            buildingsInHand.add(json);
+            makeBuildingToJson(buildingsInHand, building);
         }
+        return buildingsInHand;
+    }
 
+    public void makeBuildingToJson(List<JsonObject> reserve, Building building) {
+        JsonObject walls = new JsonObject();
+        for (Map.Entry<String, Boolean> entry : building.getWalls().entrySet()) {
+            walls.put(entry.getKey(), entry.getValue());
+        }
+        JsonObject json = new JsonObject();
+        json.put("type", building.getBuildingType().toString())
+                .put("cost", building.getCost())
+                .put(WALLS, walls);
+        reserve.add(json);
+    }
+
+    public List <List<JsonObject>> getPlayerCity(Player player){
+        List<List<JsonObject>> city = new LinkedList<>(); //placeholder
         for (List<Building> list : player.getCity()) {
             List<JsonObject> jsonList = new LinkedList<>();
             for (Building building : list) {
@@ -138,22 +160,7 @@ public class AlhambraController {
             }
             city.add(jsonList);
         }
-
-        for (Coin coin : player.getCoins()) {
-            JsonObject json = new JsonObject();
-            json.put("currency", coin.getCurrency().toString())
-                    .put("amount", coin.getAmount());
-            coins.add(json);
-        }
-
-        return new JsonObject()
-                .put("name", player.getUsername())
-                .put("coins", coins)
-                .put("reserve", reserve)
-                .put("buildings-in-hand", buildingsInHand)
-                .put("city", city)
-                .put("virtual-score", player.getVirtualScore())
-                .put("score", player.getScore());
+        return city;
     }
 
     public JsonObject getGameInfo(String gameId, Alhambra game) {
