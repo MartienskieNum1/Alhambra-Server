@@ -30,8 +30,7 @@ public class Building {
     }
 
     public int getCost() {
-        return cost;
-    }
+        return cost; }
 
     public Map<String, Boolean> getWalls() {
         return walls;

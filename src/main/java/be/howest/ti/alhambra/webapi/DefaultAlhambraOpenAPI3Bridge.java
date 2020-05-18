@@ -92,7 +92,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String body = ctx.getBodyAsString();
         Game game = alhambra.findGame(gameId);
         Player player = Json.decodeValue(body, Player.class);
-        return controller.returnPlayerToken(game, player);
+        return controller.getPlayerToken(game, player);
     }
 
 
