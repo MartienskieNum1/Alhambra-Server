@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Game {
 
+    public static final String NOT_YOUR_TURN = "It's not your turn!";
     private final String gameId;
     private String groupNr;
     private Map<String, Player> players;
@@ -204,7 +205,7 @@ public class Game {
                 throw new IllegalArgumentException("Not all your money exists!");
             }
         } else {
-            throw new IllegalArgumentException("It's not your turn!");
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
     }
 
@@ -254,7 +255,7 @@ public class Game {
             }
             player.buyBuilding(building, coins);
         } else {
-            throw new IllegalArgumentException("It's not your turn!");
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
     }
 
@@ -268,7 +269,17 @@ public class Game {
             }
             nextTurn();
         } else {
-            throw new IllegalArgumentException("It's not your turn!");
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+    public void redesign(String token, int row, int col) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            player.redesign(row, col);
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
     }
 }

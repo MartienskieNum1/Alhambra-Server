@@ -128,6 +128,25 @@ public class Player {
         }
     }
 
+    public void redesign(int row, int col) {
+        row = (city.size() / 2) + row;
+        col = (city.size() / 2) + col;
+
+        for (int cityRow = 0; cityRow < city.size(); cityRow++) {
+            for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
+                if (cityRow == row && cityCol == col) {
+                    Building building = city.get(cityRow).get(cityCol);
+                    if (building == null) {
+                        throw new IllegalArgumentException("There is no building!");
+                    } else {
+                        reserve.add(building);
+                        city.get(cityRow).set(cityCol, null);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
