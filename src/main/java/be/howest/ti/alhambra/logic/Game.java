@@ -67,10 +67,12 @@ public class Game {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
-//                if (randCoin.getAmount()==0){
-//                    AlhambraController.getScoringTable(roundNr);
-//                    roundNr++;
-//                }
+                if (randCoin.getAmount()==0){
+                    new ScoringTable().getScoringRound(roundNr, this);
+                    roundNr++;
+                    randCoinInt = rand.nextInt(remainingCoins.size());
+                    randCoin = remainingCoins.get(randCoinInt);
+                }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
             }

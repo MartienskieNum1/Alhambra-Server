@@ -63,14 +63,8 @@ public class AlhambraController {
         return listOfGamesInfo;
     }
 
-    public static Map<BuildingType, List<Integer>> getScoringTable(int round) {
-        if (round == 1){
-            return new ScoringTable().makeRound1();
-        }
-        if (round == 2){
-            return new ScoringTable().makeRound2();
-        }
-        else {return new ScoringTable().makeRound3();}
+    public Map<BuildingType, List<Integer>> getScoringTable(int round, Game game) {
+        return new ScoringTable().getScoringRound(round, game);
     }
 
     private JsonObject getBasicGameInfo(String gameId, Alhambra game) {
