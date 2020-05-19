@@ -16,7 +16,6 @@ public class Game {
     private int roundNr = 1;
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
-    private List<Boolean> areAllCoinsInBank = new LinkedList<>();
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
@@ -59,6 +58,12 @@ public class Game {
     }
 
     public void nextTurn() {
+        checkBank();
+        currentPlayer = playerOrder.pollFirst();
+        playerOrder.addLast(currentPlayer);
+    }
+
+    public void checkBank() {
         for (int i = 0; i<4; i++){
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
@@ -71,11 +76,11 @@ public class Game {
                 }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
+                if (remainingCoins.isEmpty()) {
+                    remainingCoins = Coin.allCoins();
+                }
             }
         }
-
-        currentPlayer = playerOrder.pollFirst();
-        playerOrder.addLast(currentPlayer);
     }
 
     public void startGame() {
@@ -196,7 +201,7 @@ public class Game {
                 }
             }
             else {
-                throw new IllegalArgumentException("You took to much money!");
+                throw new IllegalArgumentException("You took too much money!");
             }
 
             if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
