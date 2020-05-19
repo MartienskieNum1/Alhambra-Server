@@ -9,6 +9,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
@@ -58,7 +59,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         return controller.getCurrencies();
     }
 
-    public Object getScoringTable(RoutingContext ctx) {
+    public Map<BuildingType, List<Integer>> getScoringTable(RoutingContext ctx) {
         int round = Integer.parseInt(ctx.request().getParam("round"));
 
         return controller.getScoringTable(round);

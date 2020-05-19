@@ -63,8 +63,8 @@ public class AlhambraController {
         return listOfGamesInfo;
     }
 
-    public Map<BuildingType, List<Integer>> getScoringTable(int round, Game game) {
-        return new ScoringTable().getScoringRound(round, game);
+    public Map<BuildingType, List<Integer>> getScoringTable(int round) {
+        return new ScoringTable().getScoringRound(round);
     }
 
     private JsonObject getBasicGameInfo(String gameId, Alhambra game) {

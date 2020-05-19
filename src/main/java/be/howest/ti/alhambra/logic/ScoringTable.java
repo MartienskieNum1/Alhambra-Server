@@ -6,16 +6,16 @@ public class ScoringTable {
 
     Map<BuildingType, List<Integer>> buildingTypes = new HashMap<>();
 
-    public Map<BuildingType, List<Integer>> getScoringRound(int round, Game game){
+    public Map<BuildingType, List<Integer>> getScoringRound(int round){
         if (round == 1){
-            return new ScoringTable().makeRound1(game);
+            return new ScoringTable().makeRound1();
         }
         if (round == 2){
-            return new ScoringTable().makeRound2(game);
+            return new ScoringTable().makeRound2();
         } else {return null;}
     }
 
-    public Map<BuildingType, List<Integer>> makeRound1(Game game){
+    public Map<BuildingType, List<Integer>> makeRound1(){
         int firstRoundScore = 1;
 
         for (BuildingType type: BuildingType.values()) {
@@ -28,7 +28,7 @@ public class ScoringTable {
         return buildingTypes;
     }
 
-    public Map<BuildingType, List<Integer>> makeRound2(Game game) {
+    public Map<BuildingType, List<Integer>> makeRound2() {
         int firstRoundScore = 1;
         int secondRoundScore = 8;
 
@@ -43,7 +43,7 @@ public class ScoringTable {
         return buildingTypes;
     }
 
-    public Map<BuildingType, List<Integer>> makeRound3(Game game) {
+    public Map<BuildingType, List<Integer>> makeRound3() {
         int firstRoundScore = 1;
         int secondRoundScore = 8;
         int thirdRoundScore = 16;
@@ -60,7 +60,7 @@ public class ScoringTable {
         }
         return buildingTypes;
     }
-    
+
 //    public Map<BuildingType, Deque<Player>> makeListOfBuildingtypesPerPlayer(Game game ){
 //        Map<Player, List<Map<BuildingType, Integer>>> mapOfListsPerBuildingType = new HashMap<>();
 //        List<Map<BuildingType, Integer>> listPlayersBuildingsInCity = new LinkedList<>();
