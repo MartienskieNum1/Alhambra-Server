@@ -174,6 +174,7 @@ public class AlhambraController {
         List<JsonObject> bank = new LinkedList<>();
         JsonObject market = new JsonObject();
 
+
         for (Coin coin : gameToFind.getBank()) {
             JsonObject json = new JsonObject();
             json.put("currency", coin.getCurrency().toString())
@@ -203,6 +204,7 @@ public class AlhambraController {
                 .put(PLAYERS, playerInfo)
                 .put(STARTED, gameToFind.getStarted())
                 .put("ended", gameToFind.getEnded())
-                .put("currentPlayer", gameToFind.getCurrentPlayer().getUsername());
+                .put("currentPlayer", gameToFind.getCurrentPlayer().getUsername())
+                .put("amountOfRemainingBuildings", gameToFind.getAmountOfRemainingBuilding());
     }
 }
