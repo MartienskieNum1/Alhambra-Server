@@ -205,6 +205,6 @@ public class AlhambraController {
                 .put(STARTED, gameToFind.getStarted())
                 .put("ended", gameToFind.getEnded())
                 .put("currentPlayer", gameToFind.getCurrentPlayer().getUsername())
-                .put("amountOfRemainingBuildings", gameToFind.getAmountOfRemainingBuilding());
+                .put("remainingBuildings", gameToFind.getRemainingBuilding());
     }
 }
