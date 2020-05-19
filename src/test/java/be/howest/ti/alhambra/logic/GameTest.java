@@ -1,8 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.codegen.doc.Tag;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -133,5 +131,8 @@ class GameTest {
 
         // player can buy a building
         assertEquals(1, player2.getBuildingsInHand().size());
+
+        // IllegalArgument is thrown when its not your turn
+        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
     }
 }
