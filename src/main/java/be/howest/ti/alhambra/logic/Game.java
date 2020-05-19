@@ -64,7 +64,7 @@ public class Game {
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
                 if (randCoin.getAmount()==0){
-                    new ScoringTable().getScoringRound(roundNr, this);
+                    new ScoringTable().getScoringRound(roundNr);
                     roundNr++;
                     randCoinInt = rand.nextInt(remainingCoins.size());
                     randCoin = remainingCoins.get(randCoinInt);
