@@ -151,4 +151,22 @@ class GameTest {
         // IllegalArgument is thrown when you pay with money you don't own
         assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
+
+    @Test
+    void buyBuildingTooLess() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        assertEquals(Collections.emptyList(), player2.getBuildingsInHand());
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost()-1);
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+
+        // IllegalArgument is thrown when you pay too less
+        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+    }
 }
