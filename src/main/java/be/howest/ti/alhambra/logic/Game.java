@@ -41,7 +41,7 @@ public class Game {
     }
 
     public void shuffleRandomScoringRoundsInCoins(){
-        for (int i=0; i < 3; i++){
+        for (int i=0; i < 2; i++){
             int scoringRound = rand.nextInt(remainingCoins.size());
             remainingCoins.add(scoringRound, new Coin(Currency.BLUE, 0));
         }
