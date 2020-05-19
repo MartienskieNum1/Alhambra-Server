@@ -291,7 +291,7 @@ public class Game {
         }
     }
 
-    public int getRemainingBuilding(){
+    public int getRemainingBuildings(){
         return remainingBuildings.size();
     }
 }
