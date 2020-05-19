@@ -295,4 +295,8 @@ public class Game {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
     }
+
+    public int getRemainingBuildings(){
+        return remainingBuildings.size();
+    }
 }
