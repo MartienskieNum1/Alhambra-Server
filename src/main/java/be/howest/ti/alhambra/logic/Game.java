@@ -16,7 +16,6 @@ public class Game {
     private int roundNr = 1;
     private Map<Currency, Building> market;
     private Coin[] bank = new Coin[] {null, null, null, null};
-    private List<Boolean> areAllCoinsInBank = new LinkedList<>();
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
@@ -58,7 +57,7 @@ public class Game {
         }
     }
 
-    public void nextTurn() {
+    public void checkBank() {
         for (int i = 0; i<4; i++){
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
@@ -73,7 +72,10 @@ public class Game {
                 remainingCoins.remove(randCoinInt);
             }
         }
+    }
 
+    public void nextTurn() {
+        checkBank();
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
     }
