@@ -1,12 +1,10 @@
 package be.howest.ti.alhambra.logic;
 
-import be.howest.ti.alhambra.webapi.DefaultAlhambraOpenAPI3Bridge;
-
-import java.math.BigInteger;
 import java.util.*;
 
 public class Game {
 
+    public static final String NOT_YOUR_TURN = "It's not your turn!";
     private final String gameId;
     private String groupNr;
     private Map<String, Player> players;
@@ -53,8 +51,6 @@ public class Game {
         players.put(token, playerToAdd);
         playerCount++;
     }
-
-
 
     private void checkIfGameMeetsRequirements(){
         if (playerCount >= 2 && readyCount == playerCount){
@@ -184,23 +180,30 @@ public class Game {
     }
 
     public void giveMoney(String token, Coin[] coins) {
+        List<Boolean> areAllCoinsInBank = new LinkedList<>();
         if (checkIfCurrentPlayersTurn(players.get(token))) {
-            for (int k = 0 ; k < coins.length; k ++){
-                areAllCoinsInBank.add(false);
-            }
-            for (int i = 0; i < coins.length;i ++){
-                for (int j = 0; j < bank.length; j ++){
-                    if (bank[j].equals(coins[i])) {
-                        areAllCoinsInBank.set(i, true);
-                        j = bank.length + 1;
+            if (checkIfPlayerDoesNotTakeToMuch(coins)){
+                for (int k = 0 ; k < coins.length; k ++){
+                    areAllCoinsInBank.add(false);
+                }
+                for (int i = 0; i < coins.length;i ++){
+                    for (int j = 0; j < bank.length; j ++){
+                        if (bank[j].equals(coins[i])) {
+                            areAllCoinsInBank.set(i, true);
+                            j = bank.length + 1;
+                        }
                     }
                 }
             }
+            else {
+                throw new IllegalArgumentException("You took to much money!");
+            }
+
             if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
                 for (Coin coin : coins) {
                     players.get(token).addCoinToWallet(coin);
                     for (int j = 0; j < bank.length; j ++){
-                        if (bank[j].equals(coin)) {
+                        if (bank[j] == null || bank[j].equals(coin)) {
                             bank[j] = null;
                         }
                     }
@@ -210,7 +213,22 @@ public class Game {
                 throw new IllegalArgumentException("Not all your money exists!");
             }
         } else {
-            throw new IllegalArgumentException("It's not your turn!");
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+
+    public boolean checkIfPlayerDoesNotTakeToMuch(Coin[] coins){
+        if (coins.length > 1){
+            int totalMoneyValue = 0;
+            for (Coin coin: coins){
+                totalMoneyValue += coin.getAmount();
+            }
+
+            return totalMoneyValue <= 5;
+        }
+        else {
+            return true;
         }
     }
 
@@ -226,16 +244,50 @@ public class Game {
     public void buyBuilding(String token, List<Coin> coins, Currency currency) {
         Building building = market.get(currency);
         int randBuildingInt = rand.nextInt(remainingBuildings.size());
+        int totalAmount = 0;
         Building newBuilding = remainingBuildings.get(randBuildingInt);
         market.replace(currency, newBuilding);
         remainingBuildings.remove(randBuildingInt);
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
+            for (Coin coin : coins) {
+                if (!player.getCoins().contains(coin)) {
+                    throw new IllegalArgumentException("You don't have this money!");
+                }
+            }
+            for (Coin coin : coins) {
+                totalAmount+= coin.getAmount();
+            }
+            if (building.getCost() > totalAmount) {
+                throw new IllegalArgumentException("You paid not enough!");
+            }
             player.buyBuilding(building, coins);
-            nextTurn();
+        } else {
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
-        else {
-            throw new IllegalArgumentException("It's not your turn!");
+    }
+
+    public void buildBuilding(String token, Building building, int row, int col) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            if (row == 0 && col == 0) {
+                player.placeInReserve(building);
+            } else {
+                player.buildBuilding(building, row, col);
+            }
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+    public void redesign(String token, int row, int col) {
+        Player player = players.get(token);
+        if (checkIfCurrentPlayersTurn(player)) {
+            player.redesign(row, col);
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
     }
 }

@@ -55,8 +55,8 @@ class AlhambraControllerTest {
 
         Player player1 = new Player("maarten");
 
-        assertEquals("group27-000+maarten", controller.returnPlayerToken(myGame, player1));
-        assertThrows(IllegalArgumentException.class, () -> controller.returnPlayerToken(null, player1));
+        assertEquals("group27-000+maarten", controller.getPlayerToken(myGame, player1));
+        assertThrows(IllegalArgumentException.class, () -> controller.getPlayerToken(null, player1));
 
     }
 }

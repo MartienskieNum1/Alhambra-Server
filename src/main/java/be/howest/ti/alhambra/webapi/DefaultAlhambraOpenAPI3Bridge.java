@@ -1,7 +1,6 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.*;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -93,7 +92,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String body = ctx.getBodyAsString();
         Game game = alhambra.findGame(gameId);
         Player player = Json.decodeValue(body, Player.class);
-        return controller.returnPlayerToken(game, player);
+        return controller.getPlayerToken(game, player);
     }
 
 
@@ -140,14 +139,25 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String gameId = ctx.request().getParam(GAME_ID);
         Game game = alhambra.findGame(gameId);
         String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        Coin[] coins = Json.decodeValue(ctx.getBodyAsJson().getJsonArray("coins").toString(), Coin[].class);
-        Currency currency = Json.decodeValue(ctx.getBodyAsJson().getString("currency"), Currency.class);
+
+        JsonObject body = ctx.getBodyAsJson();
+        Coin[] coins = Json.decodeValue(body.getJsonArray("coins").toString(), Coin[].class);
+        Currency currency = Currency.valueOf(body.getString("currency").toUpperCase());
         game.buyBuilding(token, Arrays.asList(coins), currency);
         return null;
     }
 
     public Object redesign(RoutingContext ctx) {
         LOGGER.info("redesign");
+        String gameId = ctx.request().getParam(GAME_ID);
+        Game game = alhambra.findGame(gameId);
+        String token = ctx.request().getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+        JsonObject body = ctx.getBodyAsJson();
+        JsonObject jsonLocation = body.getJsonObject("location");
+        int row = Integer.parseInt(jsonLocation.getString("row"));
+        int col = Integer.parseInt(jsonLocation.getString("col"));
+
+        game.redesign(token, row, col);
         return null;
     }
 
@@ -160,13 +170,12 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Building building = Json.decodeValue((body.getJsonObject("building").toString()), Building.class);
         JsonObject jsonLocation = body.getJsonObject("location");
         if (jsonLocation != null) {
-            int row = jsonLocation.getInteger("row");
-            int col = jsonLocation.getInteger("col");
-            game.findPlayer(token).buildBuilding(building, row, col);
+            int row = Integer.parseInt(jsonLocation.getString("row"));
+            int col = Integer.parseInt(jsonLocation.getString("col"));
+            game.buildBuilding(token, building, row, col);
         } else {
-            game.findPlayer(token).placeInReserve(building);
+            game.buildBuilding(token, building, 0, 0);
         }
-        game.nextTurn();
         return null;
     }
 
