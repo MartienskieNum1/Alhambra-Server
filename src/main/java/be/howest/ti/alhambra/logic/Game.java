@@ -63,16 +63,17 @@ public class Game {
         playerOrder.addLast(currentPlayer);
     }
 
-    public void checkBank() {
+    public Computations checkBank() {
         for (int i = 0; i<4; i++){
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
                 if (randCoin.getAmount()==0){
-                    new ScoringTable().getScoringRound(roundNr);
+                    new Computations(roundNr, this, "score");
                     roundNr++;
-                    randCoinInt = rand.nextInt(remainingCoins.size());
-                    randCoin = remainingCoins.get(randCoinInt);
+                    Coin replacementRandCoin = remainingCoins.get(randCoinInt+1);
+                    bank[i] = replacementRandCoin;
+                    remainingCoins.remove(randCoinInt+1);
                 }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
@@ -81,6 +82,7 @@ public class Game {
                 }
             }
         }
+        return null;
     }
 
     public void startGame() {
@@ -267,6 +269,7 @@ public class Game {
                 throw new IllegalArgumentException("You paid not enough!");
             }
             player.buyBuilding(building, coins);
+            new Computations(roundNr, this, "");
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
