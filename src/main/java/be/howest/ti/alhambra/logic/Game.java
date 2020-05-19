@@ -185,22 +185,18 @@ public class Game {
     }
 
     public void giveMoney(String token, Coin[] coins) {
-        List<Boolean> areAllCoinsInBank = new LinkedList<>();
+        boolean[] areAllCoinsInBank = new boolean[coins.length];
         if (checkIfCurrentPlayersTurn(players.get(token))) {
-            if (checkIfPlayerDoesNotTakeToMuch(coins)){
-                for (int k = 0 ; k < coins.length; k ++){
-                    areAllCoinsInBank.add(false);
-                }
+            if (checkIfPlayerDoesNotTakeTooMuch(coins)){
                 for (int i = 0; i < coins.length;i ++){
-                    for (int j = 0; j < bank.length; j ++){
-                        if (bank[j].equals(coins[i])) {
-                            areAllCoinsInBank.set(i, true);
-                            j = bank.length + 1;
+                    for (Coin coin : bank) {
+                        if (coin.equals(coins[i])) {
+                            areAllCoinsInBank[i] = true;
+                            break;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("You took too much money!");
             }
 
@@ -223,7 +219,7 @@ public class Game {
     }
 
 
-    public boolean checkIfPlayerDoesNotTakeToMuch(Coin[] coins){
+    public boolean checkIfPlayerDoesNotTakeTooMuch(Coin[] coins){
         if (coins.length > 1){
             int totalMoneyValue = 0;
             for (Coin coin: coins){
@@ -237,9 +233,13 @@ public class Game {
         }
     }
 
-    public boolean checkIfAllCoinsAreInTheBank(List<Boolean> list){
-        return list.isEmpty() || list.stream()
-                .allMatch(list.get(0)::equals);
+    public boolean checkIfAllCoinsAreInTheBank(boolean[] list){
+        for (boolean element : list) {
+            if (!element) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean checkIfCurrentPlayersTurn(Player player) {
