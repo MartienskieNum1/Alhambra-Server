@@ -3,7 +3,7 @@ package be.howest.ti.alhambra.logic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -112,5 +112,61 @@ class GameTest {
         wantedCoins = new Coin[]{illegalCoin};
         Coin[] finalWantedCoins2 = wantedCoins;
         assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
+    }
+
+    @Test
+    void buyBuilding() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        assertEquals(Collections.emptyList(), player2.getBuildingsInHand());
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        // player can buy a building
+        assertEquals(1, player2.getBuildingsInHand().size());
+
+        // IllegalArgument is thrown when its not your turn
+        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
+    }
+
+    @Test
+    void buyBuildingFalseMoney() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        assertEquals(Collections.emptyList(), player2.getBuildingsInHand());
+
+        Coin selfMadeCoin = new Coin(Currency.BLUE, 15);
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+
+        // IllegalArgument is thrown when you pay with money you don't own
+        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+    }
+
+    @Test
+    void buyBuildingTooLess() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        assertEquals(Collections.emptyList(), player2.getBuildingsInHand());
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost()-1);
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+
+        // IllegalArgument is thrown when you pay too less
+        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
 }
