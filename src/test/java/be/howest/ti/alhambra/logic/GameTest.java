@@ -3,9 +3,6 @@ package be.howest.ti.alhambra.logic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,8 +11,8 @@ class GameTest {
     Alhambra alhambra = new Alhambra();
     Game myGame;
     Player player1 = new Player("maarten");
-    Player player2 = new Player("niels");
-    Player player3 = new Player("Jef");
+    Player player2 = new Player("jos");
+    Player player3 = new Player("jef");
 
     @BeforeEach
     void fillAlhambra() {
@@ -84,10 +81,36 @@ class GameTest {
     }
 
     @Test
-    void takeMonetTest(){
-        startGame();
+    void giveMoney() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
 
-        Player currentPlayer = myGame.getCurrentPlayer();
+        // player can receive demanded coins
+        Coin coin1 = myGame.getBank()[0];
+        Coin[] wantedCoins = new Coin[]{coin1};
+        int initAmountCoins = player2.getCoins().size();
+        myGame.giveMoney("group27-000+jos", wantedCoins);
+        assertTrue(initAmountCoins < player2.getCoins().size());
 
+        // IllegalArgument is thrown when its not your turn
+        Coin[] finalWantedCoins = wantedCoins;
+        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+jos", finalWantedCoins));
+
+        coin1 = myGame.getBank()[0];
+        Coin coin2 = myGame.getBank()[1];
+        Coin coin3 = myGame.getBank()[2];
+        Coin coin4 = myGame.getBank()[3];
+
+        // IllegalArgument is thrown when too high value is taken
+        wantedCoins = new Coin[]{coin1, coin2, coin3, coin4};
+        Coin[] finalWantedCoins1 = wantedCoins;
+        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins1));
+
+        // IllegalArgument is thrown when player wants money that doesn't exist
+        Coin illegalCoin = new Coin(Currency.BLUE, 15);
+        wantedCoins = new Coin[]{illegalCoin};
+        Coin[] finalWantedCoins2 = wantedCoins;
+        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
     }
 }
