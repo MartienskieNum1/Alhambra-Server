@@ -57,6 +57,12 @@ public class Game {
         }
     }
 
+    public void nextTurn() {
+        checkBank();
+        currentPlayer = playerOrder.pollFirst();
+        playerOrder.addLast(currentPlayer);
+    }
+
     public void checkBank() {
         for (int i = 0; i<4; i++){
             int randCoinInt = rand.nextInt(remainingCoins.size());
@@ -70,14 +76,11 @@ public class Game {
                 }
                 bank[i] = randCoin;
                 remainingCoins.remove(randCoinInt);
+                if (remainingCoins.isEmpty()) {
+                    remainingCoins = Coin.allCoins();
+                }
             }
         }
-    }
-
-    public void nextTurn() {
-        checkBank();
-        currentPlayer = playerOrder.pollFirst();
-        playerOrder.addLast(currentPlayer);
     }
 
     public void startGame() {
@@ -198,7 +201,7 @@ public class Game {
                 }
             }
             else {
-                throw new IllegalArgumentException("You took to much money!");
+                throw new IllegalArgumentException("You took too much money!");
             }
 
             if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
