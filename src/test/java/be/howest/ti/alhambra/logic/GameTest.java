@@ -219,4 +219,25 @@ class GameTest {
         // Player can place building in Alhambra
         assertEquals(init, player2.getCity());
     }
+
+    @Test
+    void buildBuildingToReserve() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        assertEquals(0, player2.getReserve().size());
+
+        myGame.buildBuilding("group27-000+jos", building, 0, 0);
+
+        // Player can place building in Alhambra
+        assertEquals(1, player2.getReserve().size());
+    }
 }
