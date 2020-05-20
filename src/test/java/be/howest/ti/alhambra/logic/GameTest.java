@@ -95,7 +95,8 @@ class GameTest {
 
         // IllegalArgument is thrown when its not your turn
         Coin[] finalWantedCoins = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+jos", finalWantedCoins));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+jos", finalWantedCoins));
 
         coin1 = myGame.getBank()[0];
         Coin coin2 = myGame.getBank()[1];
@@ -105,13 +106,15 @@ class GameTest {
         // IllegalArgument is thrown when too high value is taken
         wantedCoins = new Coin[]{coin1, coin2, coin3, coin4};
         Coin[] finalWantedCoins1 = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins1));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins1));
 
         // IllegalArgument is thrown when player wants money that doesn't exist
         Coin illegalCoin = new Coin(Currency.BLUE, 15);
         wantedCoins = new Coin[]{illegalCoin};
         Coin[] finalWantedCoins2 = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
     }
 
     @Test
@@ -133,7 +136,8 @@ class GameTest {
         assertEquals(1, player2.getBuildingsInHand().size());
 
         // IllegalArgument is thrown when its not your turn
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
     }
 
     @Test
@@ -149,7 +153,8 @@ class GameTest {
         coins.add(selfMadeCoin);
 
         // IllegalArgument is thrown when you pay with money you don't own
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
 
     @Test
@@ -167,7 +172,8 @@ class GameTest {
         player2.addCoinToWallet(selfMadeCoin);
 
         // IllegalArgument is thrown when you pay too less
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
 
     @Test
@@ -191,6 +197,10 @@ class GameTest {
         coins.add(selfMadeCoin);
         player2.addCoinToWallet(selfMadeCoin);
         myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        // IllegalArgument is thrown when its not your turn
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buildBuilding("group27-000+maarten", building, 0, -1));
 
         row0.add(0, null);
         row0.add(row0.size(), null);
