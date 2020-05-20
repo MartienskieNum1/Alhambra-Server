@@ -189,14 +189,16 @@ class GameTest {
         myGame.setPlayerReady("group27-000+jef");
         myGame.setPlayerReady("group27-000+jos");
 
-        assertEquals(init, player2.getCity());
-
         Building building = myGame.getMarket().get(Currency.BLUE);
         Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
         List<Coin> coins = new LinkedList<>();
         coins.add(selfMadeCoin);
         player2.addCoinToWallet(selfMadeCoin);
         myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        // check init city + in hand
+        assertEquals(init, player2.getCity());
+        assertEquals(1, player2.getBuildingsInHand().size());
 
         // IllegalArgument is thrown when its not your turn
         assertThrows(IllegalArgumentException.class,
@@ -216,8 +218,9 @@ class GameTest {
 
         myGame.buildBuilding("group27-000+jos", building, 0, -1);
 
-        // Player can place building in Alhambra
+        // Player can place building in Alhambra + no more in hand
         assertEquals(init, player2.getCity());
+        assertEquals(0, player2.getBuildingsInHand().size());
     }
 
     @Test
@@ -233,11 +236,14 @@ class GameTest {
         player2.addCoinToWallet(selfMadeCoin);
         myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
 
+        // check init in hand + reserve
+        assertEquals(1, player2.getBuildingsInHand().size());
         assertEquals(0, player2.getReserve().size());
 
         myGame.buildBuilding("group27-000+jos", building, 0, 0);
 
-        // Player can place building in Alhambra
+        // Player can place building in Alhambra + no more in hand
         assertEquals(1, player2.getReserve().size());
+        assertEquals(0, player2.getBuildingsInHand().size());
     }
 }
