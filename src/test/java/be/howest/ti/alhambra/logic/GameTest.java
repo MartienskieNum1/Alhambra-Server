@@ -169,4 +169,44 @@ class GameTest {
         // IllegalArgument is thrown when you pay too less
         assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
+
+    @Test
+    void buildBuilding() {
+        LinkedList<LinkedList<Building>> init = new LinkedList<>();
+        LinkedList<Building> row0 = new LinkedList<>();
+        Building fountain = new Building(null, 0);
+        fountain.putWallOnBuilding(false, false, false, false);
+        row0.add(fountain);
+        init.add(row0);
+
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        assertEquals(init, player2.getCity());
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        row0.add(0, null);
+        row0.add(row0.size(), null);
+        LinkedList<Building> rowMin1 = new LinkedList<>();
+        LinkedList<Building> row1 = new LinkedList<>();
+        for (int i = 0; i < 3; i++) {
+            rowMin1.add(null);
+            row1.add(null);
+        }
+        init.add(0, rowMin1);
+        init.add(init.size(), row1);
+        init.get(1).set(0, building);
+
+        myGame.buildBuilding("group27-000+jos", building, 0, -1);
+
+        // Player can place building in Alhambra
+        assertEquals(init, player2.getCity());
+    }
 }
