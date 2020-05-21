@@ -95,7 +95,8 @@ class GameTest {
 
         // IllegalArgument is thrown when its not your turn
         Coin[] finalWantedCoins = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+jos", finalWantedCoins));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+jos", finalWantedCoins));
 
         coin1 = myGame.getBank()[0];
         Coin coin2 = myGame.getBank()[1];
@@ -105,13 +106,15 @@ class GameTest {
         // IllegalArgument is thrown when too high value is taken
         wantedCoins = new Coin[]{coin1, coin2, coin3, coin4};
         Coin[] finalWantedCoins1 = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins1));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins1));
 
         // IllegalArgument is thrown when player wants money that doesn't exist
         Coin illegalCoin = new Coin(Currency.BLUE, 15);
         wantedCoins = new Coin[]{illegalCoin};
         Coin[] finalWantedCoins2 = wantedCoins;
-        assertThrows(IllegalArgumentException.class, () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.giveMoney("group27-000+maarten", finalWantedCoins2));
     }
 
     @Test
@@ -133,7 +136,8 @@ class GameTest {
         assertEquals(1, player2.getBuildingsInHand().size());
 
         // IllegalArgument is thrown when its not your turn
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+maarten", coins, Currency.BLUE));
     }
 
     @Test
@@ -149,7 +153,8 @@ class GameTest {
         coins.add(selfMadeCoin);
 
         // IllegalArgument is thrown when you pay with money you don't own
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
     }
 
     @Test
@@ -167,6 +172,78 @@ class GameTest {
         player2.addCoinToWallet(selfMadeCoin);
 
         // IllegalArgument is thrown when you pay too less
-        assertThrows(IllegalArgumentException.class, () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE));
+    }
+
+    @Test
+    void buildBuilding() {
+        LinkedList<LinkedList<Building>> init = new LinkedList<>();
+        LinkedList<Building> row0 = new LinkedList<>();
+        Building fountain = new Building(null, 0);
+        fountain.putWallOnBuilding(false, false, false, false);
+        row0.add(fountain);
+        init.add(row0);
+
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        // check init city + in hand
+        assertEquals(init, player2.getCity());
+        assertEquals(1, player2.getBuildingsInHand().size());
+
+        // IllegalArgument is thrown when its not your turn
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.buildBuilding("group27-000+maarten", building, 0, -1));
+
+        row0.add(0, null);
+        row0.add(row0.size(), null);
+        LinkedList<Building> rowMin1 = new LinkedList<>();
+        LinkedList<Building> row1 = new LinkedList<>();
+        for (int i = 0; i < 3; i++) {
+            rowMin1.add(null);
+            row1.add(null);
+        }
+        init.add(0, rowMin1);
+        init.add(init.size(), row1);
+        init.get(1).set(0, building);
+
+        myGame.buildBuilding("group27-000+jos", building, 0, -1);
+
+        // Player can place building in Alhambra + no more in hand
+        assertEquals(init, player2.getCity());
+        assertEquals(0, player2.getBuildingsInHand().size());
+    }
+
+    @Test
+    void buildBuildingToReserve() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        // check init in hand + reserve
+        assertEquals(1, player2.getBuildingsInHand().size());
+        assertEquals(0, player2.getReserve().size());
+
+        myGame.buildBuilding("group27-000+jos", building, 0, 0);
+
+        // Player can place building in Alhambra + no more in hand
+        assertEquals(1, player2.getReserve().size());
+        assertEquals(0, player2.getBuildingsInHand().size());
     }
 }
