@@ -286,10 +286,14 @@ public class Game {
         }
     }
 
-    public void redesign(String token, int row, int col) {
+    public void redesign(String token, Building building, int row, int col) {
         Player player = players.get(token);
         if (checkIfCurrentPlayersTurn(player)) {
-            player.redesign(row, col);
+            if (building == null) {
+                player.redesign(row, col);
+            } else {
+                player.redesign(building, row, col);
+            }
             nextTurn();
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
