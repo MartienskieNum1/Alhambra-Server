@@ -58,7 +58,7 @@ public class Player {
         return buildingsInHand;
     }
 
-    public LinkedList<LinkedList<Building>> getCity() {
+    public List<LinkedList<Building>> getCity() {
         return city;
     }
 
