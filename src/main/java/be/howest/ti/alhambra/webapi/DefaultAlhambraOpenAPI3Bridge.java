@@ -18,10 +18,12 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
     public static final String GAME_ID = "gameId";
     private final AlhambraController controller;
     private final Alhambra alhambra;
+    private final ToJson toJson;
 
     public DefaultAlhambraOpenAPI3Bridge() {
         this.alhambra = new Alhambra();
         this.controller = new AlhambraController();
+        this.toJson = new ToJson();
     }
 
     @SuppressWarnings("squid:S2068")
@@ -70,7 +72,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         String prefix = ctx.request().getParam("prefix");
         String details = ctx.request().getParam("details");
 
-        return controller.returnListGameDetails(listOfGames, prefix, details);
+        return toJson.returnListGameDetails(listOfGames, prefix, details);
     }
 
     public Object createGame(RoutingContext ctx) {
@@ -184,6 +186,6 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         LOGGER.info("getGame");
         String gameId = ctx.request().getParam(GAME_ID);
 
-        return controller.getGameInfo(gameId, alhambra);
+        return toJson.getGameInfo(gameId, alhambra);
     }
 }
