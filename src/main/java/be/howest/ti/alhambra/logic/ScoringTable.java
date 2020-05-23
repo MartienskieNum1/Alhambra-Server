@@ -20,14 +20,20 @@ public class ScoringTable {
             if (roundNr > 2) {
                 scores.add(thirdRoundScore);
                 thirdRoundScore++;
-            }
-
-            if (roundNr == 2) {
                 scores.add(secondRoundScore);
                 secondRoundScore++;
+                scores.add(firstRoundScore);
+                firstRoundScore ++;
             }
 
-            if (roundNr == 1){
+            else if (roundNr == 2) {
+                scores.add(secondRoundScore);
+                secondRoundScore++;
+                scores.add(firstRoundScore);
+                firstRoundScore ++;
+            }
+
+            else if (roundNr == 1){
                 scores.add(firstRoundScore);
                 firstRoundScore ++;
             }

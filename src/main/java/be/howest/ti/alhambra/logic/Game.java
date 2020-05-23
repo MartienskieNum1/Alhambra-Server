@@ -269,7 +269,6 @@ public class Game {
                 throw new IllegalArgumentException("You paid not enough!");
             }
             player.buyBuilding(building, coins);
-            new Computations(roundNr, this, "");
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
@@ -282,6 +281,7 @@ public class Game {
                 player.placeInReserve(building);
             } else {
                 player.buildBuilding(building, row, col);
+                new Computations(roundNr, this, "");
             }
             nextTurn();
         } else {
