@@ -1,6 +1,7 @@
 package be.howest.ti.alhambra.webapi;
 
 import be.howest.ti.alhambra.logic.*;
+import be.howest.ti.alhambra.logic.Currency;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -8,9 +9,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
 
@@ -38,7 +37,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
             playerName = alhambra.findGame(gameId).getPlayers().get(token).getUsername();
         }
         String rightToken = gameId + "+" + playerName;
-        return token.equals(rightToken);
+        return controller.decodeToken(token).equals(rightToken);
     }
 
     public Object getBuildings(RoutingContext ctx) {
