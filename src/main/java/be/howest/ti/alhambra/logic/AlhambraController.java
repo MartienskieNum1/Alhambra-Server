@@ -1,8 +1,5 @@
 package be.howest.ti.alhambra.logic;
 
-import io.vertx.core.json.JsonObject;
-
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +9,6 @@ public class AlhambraController {
     public static final String STARTED = "started";
     public static final String PLAYERS = "players";
     private BuildingFactory buildingFactory = new BuildingFactory();
-    private ToJson toJson = new ToJson();
 
     public Currency[] getCurrencies() {
         return Currency.values();
