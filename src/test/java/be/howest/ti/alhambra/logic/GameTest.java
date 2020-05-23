@@ -246,4 +246,97 @@ class GameTest {
         assertEquals(1, player2.getReserve().size());
         assertEquals(0, player2.getBuildingsInHand().size());
     }
+
+    @Test
+    void redesignFromCityInReserve() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        myGame.buildBuilding("group27-000+jos", building, 0, -1);
+
+        // check init reserve
+        assertEquals(0, player2.getReserve().size());
+
+        // IllegalArgument is thrown when its not your turn
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.redesign("group27-000+jos", null, 0, -1));
+
+        myGame.nextTurn();
+        myGame.nextTurn();
+
+        // IllegalArgument is thrown when there is no building in that place of city
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.redesign("group27-000+jos", null, 0, 1));
+
+        myGame.redesign("group27-000+jos", null, 0, -1);
+
+        // Player can put building from city in reserve
+        assertEquals(1, player2.getReserve().size());
+    }
+
+    @Test
+    void redesignFromReserveInCity() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        myGame.buildBuilding("group27-000+jos", building, 0, 0);
+
+        assertEquals(1, player2.getReserve().size());
+
+        myGame.nextTurn();
+        myGame.nextTurn();
+
+        myGame.redesign("group27-000+jos", building, 0, -1);
+
+        // Player can put building from reserve in city
+        assertEquals(0, player2.getReserve().size());
+    }
+
+    @Test
+    void removePlayer() {
+        // check init
+        assertEquals(3, myGame.getPlayerCount());
+
+        myGame.removePlayer("group27-000+jos");
+
+        // Player can leave game
+        assertEquals(2, myGame.getPlayerCount());
+
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+
+        // Player can't leave game when it has started
+        assertThrows(IllegalArgumentException.class, () -> myGame.removePlayer("group27-000+jef"));
+    }
+
+    @Test
+    void removePlayerReadyCount() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jos");
+
+        // check init
+        assertEquals(2, myGame.getReadyCount());
+
+        myGame.removePlayer("group27-000+jos");
+
+        // readyCount decreases when a player that's ready leaves
+        assertEquals(1, myGame.getReadyCount());
+    }
 }
