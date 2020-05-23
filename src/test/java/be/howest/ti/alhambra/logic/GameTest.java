@@ -325,4 +325,18 @@ class GameTest {
         // Player can't leave game when it has started
         assertThrows(IllegalArgumentException.class, () -> myGame.removePlayer("group27-000+jef"));
     }
+
+    @Test
+    void removePlayerReadyCount() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jos");
+
+        // check init
+        assertEquals(2, myGame.getReadyCount());
+
+        myGame.removePlayer("group27-000+jos");
+
+        // readyCount decreases when a player that's ready leaves
+        assertEquals(1, myGame.getReadyCount());
+    }
 }
