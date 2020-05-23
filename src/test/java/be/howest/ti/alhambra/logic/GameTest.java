@@ -308,4 +308,35 @@ class GameTest {
         // Player can put building from reserve in city
         assertEquals(0, player2.getReserve().size());
     }
+
+    @Test
+    void removePlayer() {
+        // check init
+        assertEquals(3, myGame.getPlayerCount());
+
+        myGame.removePlayer("group27-000+jos");
+
+        // Player can leave game
+        assertEquals(2, myGame.getPlayerCount());
+
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+
+        // Player can't leave game when it has started
+        assertThrows(IllegalArgumentException.class, () -> myGame.removePlayer("group27-000+jef"));
+    }
+
+    @Test
+    void removePlayerReadyCount() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jos");
+
+        // check init
+        assertEquals(2, myGame.getReadyCount());
+
+        myGame.removePlayer("group27-000+jos");
+
+        // readyCount decreases when a player that's ready leaves
+        assertEquals(1, myGame.getReadyCount());
+    }
 }
