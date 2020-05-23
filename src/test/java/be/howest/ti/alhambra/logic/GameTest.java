@@ -248,7 +248,7 @@ class GameTest {
     }
 
     @Test
-    void redesign() {
+    void redesignFromCityInReserve() {
         myGame.setPlayerReady("group27-000+maarten");
         myGame.setPlayerReady("group27-000+jef");
         myGame.setPlayerReady("group27-000+jos");
@@ -267,17 +267,45 @@ class GameTest {
         assertEquals(0, player2.getReserve().size());
 
         // IllegalArgument is thrown when its not your turn
-        assertThrows(IllegalArgumentException.class, () -> myGame.redesign("group27-000+jos", 0, -1));
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.redesign("group27-000+jos", null, 0, -1));
 
         myGame.nextTurn();
         myGame.nextTurn();
 
-        // IllegalArgument is thrown when there is no building
-        assertThrows(IllegalArgumentException.class, () -> myGame.redesign("group27-000+jos", 0, 1));
+        // IllegalArgument is thrown when there is no building in that place of city
+        assertThrows(IllegalArgumentException.class,
+                () -> myGame.redesign("group27-000+jos", null, 0, 1));
 
-        myGame.redesign("group27-000+jos", 0, -1);
+        myGame.redesign("group27-000+jos", null, 0, -1);
 
         // Player can put building from city in reserve
         assertEquals(1, player2.getReserve().size());
+    }
+
+    @Test
+    void redesignFromReserveInCity() {
+        myGame.setPlayerReady("group27-000+maarten");
+        myGame.setPlayerReady("group27-000+jef");
+        myGame.setPlayerReady("group27-000+jos");
+
+        Building building = myGame.getMarket().get(Currency.BLUE);
+        Coin selfMadeCoin = new Coin(Currency.BLUE, building.getCost());
+        List<Coin> coins = new LinkedList<>();
+        coins.add(selfMadeCoin);
+        player2.addCoinToWallet(selfMadeCoin);
+        myGame.buyBuilding("group27-000+jos", coins, Currency.BLUE);
+
+        myGame.buildBuilding("group27-000+jos", building, 0, 0);
+
+        assertEquals(1, player2.getReserve().size());
+
+        myGame.nextTurn();
+        myGame.nextTurn();
+
+        myGame.redesign("group27-000+jos", building, 0, -1);
+
+        // Player can put building from reserve in city
+        assertEquals(0, player2.getReserve().size());
     }
 }
