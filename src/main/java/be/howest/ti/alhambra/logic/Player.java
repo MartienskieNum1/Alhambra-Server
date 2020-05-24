@@ -153,6 +153,14 @@ public class Player {
         }
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setVirtualScore(int virtualScore) {
+        this.virtualScore = virtualScore;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
