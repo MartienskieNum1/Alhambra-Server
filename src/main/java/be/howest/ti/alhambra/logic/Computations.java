@@ -97,7 +97,7 @@ public class Computations {
                 } else if (round == 2) {
                     bestPlayer.setVirtualScore(bestScore);
                     secondBestPlayer.setVirtualScore(secondScore);
-                } else if (round == 1){
+                } else {
                     bestPlayer.setVirtualScore(bestScore);
                 }
 
