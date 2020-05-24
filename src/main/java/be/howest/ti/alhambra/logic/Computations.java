@@ -9,18 +9,17 @@ public class Computations {
     }
 
     public void makeListOfBuildingtypesPerPlayer(int round, Game game, String typeOfScore) {
-        Map<Player, List<Map<BuildingType, Integer>>> mapOfListsPerBuildingType = new HashMap<>();
-        List<Map<BuildingType, Integer>> listPlayersBuildingsInCity = new LinkedList<>();
+        Map<Player, Map<BuildingType, Integer>> mapOfMapPerBuildingType = new HashMap<>();
         for (Player playerToCheck : game.getPlayersList()) {
-            Map<BuildingType, Integer> buildingsInCity = new HashMap<>();
+            Map<BuildingType, Integer> mapPlayersBuildingsInCity = new HashMap<>();
             for (LinkedList<Building> row : playerToCheck.getCity()) {
                 for (Building building : row) {
-                    if (building != null){
+                    if (building != null && building.getBuildingType() != null){
                         BuildingType type = building.getBuildingType();
-                        if (!buildingsInCity.containsKey(type)) {
-                            buildingsInCity.put(type, 1);
+                        if (!mapPlayersBuildingsInCity.containsKey(type)) {
+                            mapPlayersBuildingsInCity.put(type, 1);
                         } else {
-                            for (Map.Entry<BuildingType, Integer> entry : buildingsInCity.entrySet()) {
+                            for (Map.Entry<BuildingType, Integer> entry : mapPlayersBuildingsInCity.entrySet()) {
                                 if (entry.getKey().equals(type)) {
                                     entry.setValue(entry.getValue() + 1);
                                 }
@@ -29,35 +28,32 @@ public class Computations {
                     }
                 }
             }
-            listPlayersBuildingsInCity.add(buildingsInCity);
-            mapOfListsPerBuildingType.put(playerToCheck, listPlayersBuildingsInCity);
+            mapOfMapPerBuildingType.put(playerToCheck, mapPlayersBuildingsInCity);
         }
-        computeWhoHasMost(round, mapOfListsPerBuildingType, typeOfScore, game);
+        computeWhoHasMost(round, mapOfMapPerBuildingType, typeOfScore, game);
     }
 
-    public void computeWhoHasMost(int round, Map<Player, List<Map<BuildingType, Integer>>> map, String typeOfScore, Game game) {
+    public void computeWhoHasMost(int round, Map<Player, Map<BuildingType, Integer>> map, String typeOfScore, Game game) {
         Map<BuildingType, List<Player>> playersWithMostOfType = new HashMap<>();
         Map<BuildingType, Integer> biggestValues = new HashMap<>();
         List<Player> deque = new LinkedList();
 
-        for (Map.Entry<Player, List<Map<BuildingType, Integer>>> entry : map.entrySet()) {
+        for (Map.Entry<Player, Map<BuildingType, Integer>> entry : map.entrySet()) {
             Player playerToCheck = entry.getKey();
 
-            for (Map<BuildingType, Integer> mapInListOfPlayer : entry.getValue()) {
-                for (Map.Entry<BuildingType, Integer> map2 : mapInListOfPlayer.entrySet()) {
-                    if (playersWithMostOfType.containsKey(map2.getKey()) && biggestValues.containsKey(map2.getKey())) {
-                        if (map2.getValue() > biggestValues.get(map2.getKey())) {
-                            biggestValues.remove(map2.getKey());
-                            biggestValues.put(map2.getKey(), map2.getValue());
-                            deque.add(playerToCheck);
-                            playersWithMostOfType.remove(map2.getKey(), deque);
-                            playersWithMostOfType.put(map2.getKey(), deque);
-                        }
-                    } else {
+            for (Map.Entry<BuildingType, Integer> map2 : entry.getValue().entrySet()) {
+                if (playersWithMostOfType.containsKey(map2.getKey()) && biggestValues.containsKey(map2.getKey())) {
+                    if (map2.getValue() > biggestValues.get(map2.getKey())) {
+                        biggestValues.remove(map2.getKey());
+                        biggestValues.put(map2.getKey(), map2.getValue());
                         deque.add(playerToCheck);
-                        playersWithMostOfType.putIfAbsent(map2.getKey(), deque);
-                        biggestValues.putIfAbsent(map2.getKey(), map2.getValue());
+                        playersWithMostOfType.remove(map2.getKey(), deque);
+                        playersWithMostOfType.put(map2.getKey(), deque);
                     }
+                } else {
+                    deque.add(playerToCheck);
+                    playersWithMostOfType.putIfAbsent(map2.getKey(), deque);
+                    biggestValues.putIfAbsent(map2.getKey(), map2.getValue());
                 }
             }
         }
