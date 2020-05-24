@@ -99,18 +99,22 @@ public class Player {
                         cityRow.add(cityRow.size(),null);
                     }
                 }
-                
+
             row = (city.size() / 2) + row;
             col = (city.size() / 2) + col;
+            setBuildingInCity(row, col, building);
 
-            for (int cityRow = 0; cityRow < city.size(); cityRow++) {
-                for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
-                    if (cityRow == row && cityCol == col) {
-                        city.get(cityRow).set(cityCol, building);
-                    }
+            buildingsInHand.remove(building);
+        }
+    }
+
+    private void setBuildingInCity(int row, int col, Building building) {
+        for (int cityRow = 0; cityRow < city.size(); cityRow++) {
+            for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
+                if (cityRow == row && cityCol == col) {
+                    city.get(cityRow).set(cityCol, building);
                 }
             }
-            buildingsInHand.remove(building);
         }
     }
 
