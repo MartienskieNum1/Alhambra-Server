@@ -32,10 +32,10 @@ public class Computations {
             listPlayersBuildingsInCity.add(buildingsInCity);
             mapOfListsPerBuildingType.put(playerToCheck, listPlayersBuildingsInCity);
         }
-        computeWhoHasMost(round, mapOfListsPerBuildingType, typeOfScore);
+        computeWhoHasMost(round, mapOfListsPerBuildingType, typeOfScore, game);
     }
 
-    public void computeWhoHasMost(int round, Map<Player, List<Map<BuildingType, Integer>>> map, String typeOfScore) {
+    public void computeWhoHasMost(int round, Map<Player, List<Map<BuildingType, Integer>>> map, String typeOfScore, Game game) {
         Map<BuildingType, List<Player>> playersWithMostOfType = new HashMap<>();
         Map<BuildingType, Integer> biggestValues = new HashMap<>();
         List<Player> deque = new LinkedList();
@@ -61,10 +61,10 @@ public class Computations {
                 }
             }
         }
-        computeScores(round, playersWithMostOfType, typeOfScore);
+        computeScores(round, playersWithMostOfType, typeOfScore, game);
     }
 
-    public void computeScores(int round, Map<BuildingType, List<Player>> mapPlayerWithMostOfType, String typeOfScore){
+    public void computeScores(int round, Map<BuildingType, List<Player>> mapPlayerWithMostOfType, String typeOfScore, Game game){
         Map<BuildingType, List<Integer>> pointsPerBuildingType = new ScoringTable().makeRounds(3);
 
         for (Map.Entry<BuildingType, List<Player>> mapOfPlayerWithMost : mapPlayerWithMostOfType.entrySet()) {
@@ -97,7 +97,7 @@ public class Computations {
                 } else if (round == 2) {
                     bestPlayer.setVirtualScore(bestScore);
                     secondBestPlayer.setVirtualScore(secondScore);
-                } else if (round == 1){
+                } else {
                     bestPlayer.setVirtualScore(bestScore);
                 }
 
@@ -106,6 +106,8 @@ public class Computations {
                         bestPlayer.setScore(bestScore);
                         secondBestPlayer.setScore(secondScore);
                         thirdBestPlayer.setScore(thirdScore);
+                        game.setEnded(true);
+
                     } else if (round == 2) {
                         bestPlayer.setScore(bestScore);
                         secondBestPlayer.setScore(secondScore);

@@ -64,34 +64,35 @@ public class Game {
         playerOrder.addLast(currentPlayer);
     }
 
-    public Computations checkBank() {
+    public void checkBank() {
         for (int i = 0; i<4; i++){
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
-                if (randCoin.getAmount()==0){
+                if (randCoin.getAmount()!=0){
+                    bank[i] = randCoin;
+                    remainingCoins.remove(randCoinInt);
+                    if (remainingCoins.isEmpty()) {
+                        remainingCoins = Coin.allCoins();
+                    }
+                } else {
                     new Computations(roundNr, this, "score");
                     roundNr++;
                     Coin replacementRandCoin = remainingCoins.get(randCoinInt+1);
                     bank[i] = replacementRandCoin;
                     remainingCoins.remove(randCoinInt+1);
-                }
-                bank[i] = randCoin;
-                remainingCoins.remove(randCoinInt);
-                if (remainingCoins.isEmpty()) {
-                    remainingCoins = Coin.allCoins();
+                    if (remainingCoins.isEmpty()) {
+                        remainingCoins = Coin.allCoins();
+                    }
                 }
             }
         }
-        return null;
     }
 
     public void startGame() {
         playerOrder.addAll(getPlayersList());
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
-
-        shuffleRandomScoringRoundsInCoins();
 
         for (int i = 0; i < bank.length; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
@@ -119,6 +120,8 @@ public class Game {
                 totalValue += coinToAdd.getAmount();
             }
         }
+
+        shuffleRandomScoringRoundsInCoins();
 
         started = true;
     }
@@ -315,6 +318,13 @@ public class Game {
     }
 
     public int getRemainingBuildings(){
+        if (remainingBuildings.isEmpty()){
+            new Computations(3, this, "score");
+        }
         return remainingBuildings.size();
+    }
+
+    public void setEnded(Boolean ended) {
+        this.ended = ended;
     }
 }
