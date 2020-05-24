@@ -36,12 +36,12 @@ public class Computations {
     public void computeWhoHasMost(int round, Map<Player, Map<BuildingType, Integer>> map, String typeOfScore, Game game) {
         Map<BuildingType, Deque<Player>> playersWithMostOfType = new HashMap<>();
         Map<BuildingType, Integer> biggestValues = new HashMap<>();
-        Deque<Player> deque = new LinkedList();
 
         for (Map.Entry<Player, Map<BuildingType, Integer>> entry : map.entrySet()) {
             Player playerToCheck = entry.getKey();
 
             for (Map.Entry<BuildingType, Integer> map2 : entry.getValue().entrySet()) {
+                Deque<Player> deque = new LinkedList<>();
                 if (playersWithMostOfType.containsKey(map2.getKey()) && biggestValues.containsKey(map2.getKey())) {
                     if (map2.getValue() > biggestValues.get(map2.getKey())) {
                         biggestValues.replace(map2.getKey(), biggestValues.get(map2.getKey()), map2.getValue());
@@ -61,30 +61,34 @@ public class Computations {
     public void computeScores(int round, Map<BuildingType, Deque<Player>> mapPlayerWithMostOfType, String typeOfScore, Game game){
         Map<BuildingType, List<Integer>> pointsPerBuildingType = new ScoringTable().makeRounds(3);
 
+        for (Player player : game.getPlayersList()) {
+            player.setVirtualScore(0);
+        }
+
+        Player bestPlayer = new Player("test");
+        Player secondBestPlayer = new Player("test");
+        Player thirdBestPlayer = new Player("test");
+
         for (Map.Entry<BuildingType, Deque<Player>> mapOfPlayerWithMost : mapPlayerWithMostOfType.entrySet()) {
             if (mapOfPlayerWithMost.getKey() != null){
                 BuildingType type = mapOfPlayerWithMost.getKey();
-
-                Player bestPlayer = new Player("test");
-                Player secondBestPlayer = new Player("test");
-                Player thirdBestPlayer = new Player("test");
 
                 int bestScore = pointsPerBuildingType.get(type).get(0);
                 int secondScore = pointsPerBuildingType.get(type).get(1);
                 int thirdScore = pointsPerBuildingType.get(type).get(2);
 
                 if (mapOfPlayerWithMost.getValue().size() == 1){
-                    bestPlayer =  mapOfPlayerWithMost.getValue().pollFirst();
+                    bestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
                     bestPlayer.setVirtualScore(bestPlayer.getVirtualScore() + thirdScore);
                 } else if (mapOfPlayerWithMost.getValue().size() == 2){
-                    bestPlayer =  mapOfPlayerWithMost.getValue().pollFirst();
-                    secondBestPlayer =  mapOfPlayerWithMost.getValue().pollFirst();
-                    bestPlayer.setVirtualScore(bestPlayer.getVirtualScore() + secondScore);
+                    bestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
+                    secondBestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
+                    bestPlayer.setVirtualScore(bestPlayer.getVirtualScore()+ secondScore);
                     assert secondBestPlayer != null;
                     secondBestPlayer.setVirtualScore(secondBestPlayer.getVirtualScore() + thirdScore);
                 } else if (mapOfPlayerWithMost.getValue().size() >= 3){
-                    bestPlayer =  mapOfPlayerWithMost.getValue().pollFirst();
-                    secondBestPlayer =  mapOfPlayerWithMost.getValue().pollFirst();
+                    bestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
+                    secondBestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
                     thirdBestPlayer = mapOfPlayerWithMost.getValue().pollFirst();
                     bestPlayer.setVirtualScore(bestPlayer.getVirtualScore() + bestScore);
                     assert secondBestPlayer != null;
@@ -95,16 +99,15 @@ public class Computations {
 
                 if (typeOfScore.equals("score")){
                     if (round > 2) {
-                        bestPlayer.setScore(bestPlayer.getScore() + bestScore);
-                        secondBestPlayer.setScore(secondBestPlayer.getScore() + secondScore);
-                        thirdBestPlayer.setScore(thirdBestPlayer.getScore() + thirdScore);
+                        bestPlayer.setScore(bestPlayer.getVirtualScore());
+                        secondBestPlayer.setScore(secondBestPlayer.getVirtualScore());
+                        thirdBestPlayer.setScore(thirdBestPlayer.getVirtualScore());
                         game.setEnded(true);
-
                     } else if (round == 2) {
-                        bestPlayer.setScore(bestPlayer.getScore() + secondScore);
-                        secondBestPlayer.setScore(secondBestPlayer.getScore() + thirdScore);
+                        bestPlayer.setScore(bestPlayer.getVirtualScore());
+                        secondBestPlayer.setScore(secondBestPlayer.getVirtualScore());
                     } else if (round == 1){
-                        bestPlayer.setScore(bestPlayer.getScore() + thirdScore);
+                        bestPlayer.setScore(bestPlayer.getVirtualScore());
                     }
                 }
             }
