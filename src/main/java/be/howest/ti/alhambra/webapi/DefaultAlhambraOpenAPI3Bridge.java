@@ -133,7 +133,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Coin[] coins = Json.decodeValue(body, Coin[].class);
         Game game = alhambra.findGame(gameId);
         game.giveMoney(token, coins);
-        return null;
+        return getGame(ctx);
     }
 
     public Object buyBuilding(RoutingContext ctx) {
@@ -146,7 +146,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         Coin[] coins = Json.decodeValue(body.getJsonArray("coins").toString(), Coin[].class);
         Currency currency = Currency.valueOf(body.getString("currency").toUpperCase());
         game.buyBuilding(token, Arrays.asList(coins), currency);
-        return null;
+        return getGame(ctx);
     }
 
     public Object redesign(RoutingContext ctx) {
@@ -161,7 +161,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         int col = Integer.parseInt(jsonLocation.getString("col"));
 
         game.redesign(token, building, row, col);
-        return null;
+        return getGame(ctx);
     }
 
     public Object build(RoutingContext ctx) {
@@ -179,7 +179,7 @@ public class DefaultAlhambraOpenAPI3Bridge implements AlhambraOpenAPI3Bridge {
         } else {
             game.buildBuilding(token, building, 0, 0);
         }
-        return null;
+        return getGame(ctx);
     }
 
     public Object getGame(RoutingContext ctx) {

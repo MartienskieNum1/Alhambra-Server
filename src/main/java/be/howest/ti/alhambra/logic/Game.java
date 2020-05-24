@@ -1,5 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class Game {
@@ -19,13 +20,13 @@ public class Game {
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
-    private Random rand = new Random();
+    private SecureRandom rand = new SecureRandom();
     private List<Coin> remainingCoins = Coin.allCoins();
     private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
     private Deque<Player> playerOrder = new LinkedList<>();
 
     public Game(String gameId, String groupNr) {
-        this.market = new HashMap<>();
+        this.market = new EnumMap<>(Currency.class);
         this.market.put(Currency.BLUE, null);
         this.market.put(Currency.GREEN, null);
         this.market.put(Currency.ORANGE, null);
@@ -68,16 +69,21 @@ public class Game {
             int randCoinInt = rand.nextInt(remainingCoins.size());
             Coin randCoin = remainingCoins.get(randCoinInt);
             if (bank[i]==null){
-                if (randCoin.getAmount()==0){
-                    new ScoringTable().getScoringRound(roundNr);
+                if (randCoin.getAmount()!=0){
+                    bank[i] = randCoin;
+                    remainingCoins.remove(randCoinInt);
+                    if (remainingCoins.isEmpty()) {
+                        remainingCoins = Coin.allCoins();
+                    }
+                } else {
+                    new Computations(roundNr, this, "score");
                     roundNr++;
-                    randCoinInt = rand.nextInt(remainingCoins.size());
-                    randCoin = remainingCoins.get(randCoinInt);
-                }
-                bank[i] = randCoin;
-                remainingCoins.remove(randCoinInt);
-                if (remainingCoins.isEmpty()) {
-                    remainingCoins = Coin.allCoins();
+                    Coin replacementRandCoin = remainingCoins.get(randCoinInt+1);
+                    bank[i] = replacementRandCoin;
+                    remainingCoins.remove(randCoinInt+1);
+                    if (remainingCoins.isEmpty()) {
+                        remainingCoins = Coin.allCoins();
+                    }
                 }
             }
         }
@@ -87,8 +93,6 @@ public class Game {
         playerOrder.addAll(getPlayersList());
         currentPlayer = playerOrder.pollFirst();
         playerOrder.addLast(currentPlayer);
-
-        shuffleRandomScoringRoundsInCoins();
 
         for (int i = 0; i < bank.length; i++) {
             int randCoinInt = rand.nextInt(remainingCoins.size());
@@ -116,6 +120,8 @@ public class Game {
                 totalValue += coinToAdd.getAmount();
             }
         }
+
+        shuffleRandomScoringRoundsInCoins();
 
         started = true;
     }
@@ -179,7 +185,7 @@ public class Game {
     }
 
     public void removePlayer(String token){
-        if (!started) {
+        if (Boolean.FALSE.equals(started)) {
             if (players.get(token).isReady()) {
                 readyCount--;
             }
@@ -206,22 +212,25 @@ public class Game {
             } else {
                 throw new IllegalArgumentException("You took too much money!");
             }
-
-            if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
-                for (Coin coin : coins) {
-                    players.get(token).addCoinToWallet(coin);
-                    for (int j = 0; j < bank.length; j ++){
-                        if (bank[j] == null || bank[j].equals(coin)) {
-                            bank[j] = null;
-                        }
-                    }
-                }
-                nextTurn();
-            } else {
-                throw new IllegalArgumentException("Not all your money exists!");
-            }
+            givePlayerCoins(areAllCoinsInBank,token,coins);
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+    private void givePlayerCoins(boolean[] areAllCoinsInBank,String token, Coin[] coins) {
+        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+                for (int j = 0; j < bank.length; j ++){
+                    if (bank[j] == null || bank[j].equals(coin)) {
+                        bank[j] = null;
+                    }
+                }
+            }
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException("Not all your money exists!");
         }
     }
 
@@ -286,6 +295,7 @@ public class Game {
                 player.placeInReserve(building);
             } else {
                 player.buildBuilding(building, row, col);
+                new Computations(roundNr, this, "");
             }
             nextTurn();
         } else {
@@ -308,6 +318,13 @@ public class Game {
     }
 
     public int getRemainingBuildings(){
+        if (remainingBuildings.isEmpty()){
+            new Computations(3, this, "score");
+        }
         return remainingBuildings.size();
+    }
+
+    public void setEnded(Boolean ended) {
+        this.ended = ended;
     }
 }
