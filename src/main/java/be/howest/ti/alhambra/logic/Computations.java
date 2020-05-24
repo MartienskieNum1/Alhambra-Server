@@ -12,7 +12,7 @@ public class Computations {
         Map<Player, List<Map<BuildingType, Integer>>> mapOfListsPerBuildingType = new HashMap<>();
         List<Map<BuildingType, Integer>> listPlayersBuildingsInCity = new LinkedList<>();
         for (Player playerToCheck : game.getPlayersList()) {
-            Map<BuildingType, Integer> buildingsInCity = new EnumMap<>(BuildingType.class);
+            Map<BuildingType, Integer> buildingsInCity = new HashMap<>();
             for (LinkedList<Building> row : playerToCheck.getCity()) {
                 for (Building building : row) {
                     if (building != null){
@@ -36,8 +36,8 @@ public class Computations {
     }
 
     public void computeWhoHasMost(int round, Map<Player, List<Map<BuildingType, Integer>>> map, String typeOfScore) {
-        Map<BuildingType, List<Player>> playersWithMostOfType = new EnumMap<>(BuildingType.class);
-        Map<BuildingType, Integer> biggestValues = new EnumMap<>(BuildingType.class);
+        Map<BuildingType, List<Player>> playersWithMostOfType = new HashMap<>();
+        Map<BuildingType, Integer> biggestValues = new HashMap<>();
         List<Player> deque = new LinkedList();
 
         for (Map.Entry<Player, List<Map<BuildingType, Integer>>> entry : map.entrySet()) {
