@@ -179,7 +179,7 @@ public class Game {
     }
 
     public void removePlayer(String token){
-        if (!started) {
+        if (Boolean.FALSE.equals(started)) {
             if (players.get(token).isReady()) {
                 readyCount--;
             }
@@ -203,25 +203,31 @@ public class Game {
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 throw new IllegalArgumentException("You took too much money!");
             }
+            givePlayerCoins(areAllCoinsInBank,token,coins);
 
-            if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
-                for (Coin coin : coins) {
-                    players.get(token).addCoinToWallet(coin);
-                    for (int j = 0; j < bank.length; j ++){
-                        if (bank[j] == null || bank[j].equals(coin)) {
-                            bank[j] = null;
-                        }
-                    }
-                }
-                nextTurn();
-            } else {
-                throw new IllegalArgumentException("Not all your money exists!");
-            }
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+    private void givePlayerCoins(boolean[] areAllCoinsInBank,String token, Coin[] coins) {
+        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+                for (int j = 0; j < bank.length; j ++){
+                    if (bank[j] == null || bank[j].equals(coin)) {
+                        bank[j] = null;
+                    }
+                }
+            }
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException("Not all your money exists!");
         }
     }
 
