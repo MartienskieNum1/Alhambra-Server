@@ -1,5 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class Game {
@@ -19,7 +20,7 @@ public class Game {
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
-    private Random rand = new Random();
+    private SecureRandom rand = new SecureRandom();
     private List<Coin> remainingCoins = Coin.allCoins();
     private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
     private Deque<Player> playerOrder = new LinkedList<>();
