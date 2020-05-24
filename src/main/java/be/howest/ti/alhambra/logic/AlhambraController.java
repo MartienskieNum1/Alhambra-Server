@@ -24,14 +24,34 @@ public class AlhambraController {
 
     public String getPlayerToken(Game game, Player player) {
         if (game != null) {
-            String token = game.getGameId() + "+" + player.getUsername();
-            game.addPlayer(token, player);
-            return token;
+            String encodedToken = encodeToken(game, player);
+            game.addPlayer(encodedToken, player);
+            return encodedToken;
         }
         throw new IllegalArgumentException("There is no game!");
     }
 
     public Map<BuildingType, List<Integer>> getScoringTable(int round) {
         return new ScoringTable().getScoringRound(round);
+    }
+
+    private String encodeToken(Game game, Player player) {
+        String token = game.getGameId() + "+" + player.getUsername();
+        char[] tokenArray = token.toCharArray();
+        StringBuilder encodedToken = new StringBuilder();
+        for (char character : tokenArray) {
+            encodedToken.append(Integer.toOctalString(character));
+            encodedToken.append("/");
+        }
+        return encodedToken.toString();
+    }
+
+    public String decodeToken(String token) {
+        String[] splitToken = token.split("/");
+        StringBuilder decodedToken = new StringBuilder();
+        for (String sequence : splitToken) {
+            decodedToken.append((char) Integer.parseInt(sequence, 8));
+        }
+        return decodedToken.toString();
     }
 }

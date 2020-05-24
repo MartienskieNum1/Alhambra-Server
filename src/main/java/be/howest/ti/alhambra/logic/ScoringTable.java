@@ -41,5 +41,4 @@ public class ScoringTable {
         }
         return buildingTypes;
     }
-
 }
