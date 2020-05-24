@@ -1,5 +1,6 @@
 package be.howest.ti.alhambra.logic;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class Game {
@@ -19,13 +20,13 @@ public class Game {
 
     private BuildingFactory buildingFactory = new BuildingFactory();
 
-    private Random rand = new Random();
+    private SecureRandom rand = new SecureRandom();
     private List<Coin> remainingCoins = Coin.allCoins();
     private List<Building> remainingBuildings = buildingFactory.getAllBuildings();
     private Deque<Player> playerOrder = new LinkedList<>();
 
     public Game(String gameId, String groupNr) {
-        this.market = new HashMap<>();
+        this.market = new EnumMap<>(Currency.class);
         this.market.put(Currency.BLUE, null);
         this.market.put(Currency.GREEN, null);
         this.market.put(Currency.ORANGE, null);
@@ -181,7 +182,7 @@ public class Game {
     }
 
     public void removePlayer(String token){
-        if (!started) {
+        if (Boolean.FALSE.equals(started)) {
             if (players.get(token).isReady()) {
                 readyCount--;
             }
@@ -208,22 +209,25 @@ public class Game {
             } else {
                 throw new IllegalArgumentException("You took too much money!");
             }
-
-            if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
-                for (Coin coin : coins) {
-                    players.get(token).addCoinToWallet(coin);
-                    for (int j = 0; j < bank.length; j ++){
-                        if (bank[j] == null || bank[j].equals(coin)) {
-                            bank[j] = null;
-                        }
-                    }
-                }
-                nextTurn();
-            } else {
-                throw new IllegalArgumentException("Not all your money exists!");
-            }
+            givePlayerCoins(areAllCoinsInBank,token,coins);
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
+        }
+    }
+
+    private void givePlayerCoins(boolean[] areAllCoinsInBank,String token, Coin[] coins) {
+        if (checkIfAllCoinsAreInTheBank(areAllCoinsInBank) && players.get(token).equals(getCurrentPlayer())) {
+            for (Coin coin : coins) {
+                players.get(token).addCoinToWallet(coin);
+                for (int j = 0; j < bank.length; j ++){
+                    if (bank[j] == null || bank[j].equals(coin)) {
+                        bank[j] = null;
+                    }
+                }
+            }
+            nextTurn();
+        } else {
+            throw new IllegalArgumentException("Not all your money exists!");
         }
     }
 

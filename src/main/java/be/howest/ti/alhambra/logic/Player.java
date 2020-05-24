@@ -58,7 +58,7 @@ public class Player {
         return buildingsInHand;
     }
 
-    public LinkedList<LinkedList<Building>> getCity() {
+    public List<LinkedList<Building>> getCity() {
         return city;
     }
 
@@ -86,33 +86,36 @@ public class Player {
     }
 
     public void buildBuilding(Building building, int row, int col) {
-        if (buildingsInHand.contains(building) || reserve.contains(building)) {
-            if (city.size()/2 < Math.abs(row) || city.size()/2 < Math.abs(col)) {
+        if (buildingsInHand.contains(building) || reserve.contains(building) &&city.size()/2 < Math.abs(row) || city.size()/2 < Math.abs(col)) {
                 LinkedList<Building> initList1 = new LinkedList<>();
                 initList1.add(null);
                 LinkedList<Building> initList2 = new LinkedList<>();
                 initList2.add(null);
-                city.addFirst(initList1);
-                city.addLast(initList2);
+                city.add(0,initList1);
+                city.add(city.size(),initList2);
                 for (LinkedList<Building> cityRow : city) {
                     while (cityRow.size() < city.size()) {
-                        cityRow.addFirst(null);
-                        cityRow.addLast(null);
+                        cityRow.add(0,null);
+                        cityRow.add(cityRow.size(),null);
                     }
                 }
-            }
 
             row = (city.size() / 2) + row;
             col = (city.size() / 2) + col;
 
-            for (int cityRow = 0; cityRow < city.size(); cityRow++) {
-                for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
-                    if (cityRow == row && cityCol == col) {
-                        city.get(cityRow).set(cityCol, building);
-                    }
+            setBuildingInCity(row, col, building);
+
+            buildingsInHand.remove(building);
+        }
+    }
+
+    private void setBuildingInCity(int row, int col, Building building) {
+        for (int cityRow = 0; cityRow < city.size(); cityRow++) {
+            for (int cityCol = 0; cityCol < city.get(cityRow).size(); cityCol++) {
+                if (cityRow == row && cityCol == col) {
+                    city.get(cityRow).set(cityCol, building);
                 }
             }
-            buildingsInHand.remove(building);
         }
     }
 
