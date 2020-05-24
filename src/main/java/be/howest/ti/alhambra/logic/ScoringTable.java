@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ScoringTable {
 
-    Map<BuildingType, List<Integer>> buildingTypes = new HashMap<>();
+    Map<BuildingType, List<Integer>> buildingTypes = new EnumMap<>(BuildingType.class);
 
     public Map<BuildingType, List<Integer>> getScoringRound(int round){
         if (round == 1){

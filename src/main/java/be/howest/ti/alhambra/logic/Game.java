@@ -25,7 +25,7 @@ public class Game {
     private Deque<Player> playerOrder = new LinkedList<>();
 
     public Game(String gameId, String groupNr) {
-        this.market = new HashMap<>();
+        this.market = new EnumMap<>(Currency.class);
         this.market.put(Currency.BLUE, null);
         this.market.put(Currency.GREEN, null);
         this.market.put(Currency.ORANGE, null);
@@ -203,13 +203,10 @@ public class Game {
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 throw new IllegalArgumentException("You took too much money!");
             }
             givePlayerCoins(areAllCoinsInBank,token,coins);
-
         } else {
             throw new IllegalArgumentException(NOT_YOUR_TURN);
         }
