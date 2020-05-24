@@ -102,6 +102,7 @@ public class Player {
 
             row = (city.size() / 2) + row;
             col = (city.size() / 2) + col;
+            
             setBuildingInCity(row, col, building);
 
             buildingsInHand.remove(building);
