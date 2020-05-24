@@ -37,13 +37,13 @@ public class Computations {
 
     public void computeWhoHasMost(int round, Map<Player, List<Map<BuildingType, Integer>>> map, String typeOfScore) {
         Map<BuildingType, List<Player>> playersWithMostOfType = new HashMap<>();
-        Map<BuildingType, Integer> biggestValues = new HashMap<>();// int
+        Map<BuildingType, Integer> biggestValues = new HashMap<>();
         List<Player> deque = new LinkedList();
 
-        for (Map.Entry<Player, List<Map<BuildingType, Integer>>> entry : map.entrySet()) { // voor elke speler in map of lists
-            Player playerToCheck = entry.getKey(); //in speler
+        for (Map.Entry<Player, List<Map<BuildingType, Integer>>> entry : map.entrySet()) {
+            Player playerToCheck = entry.getKey();
 
-            for (Map<BuildingType, Integer> mapInListOfPlayer : entry.getValue()) { // list of maps<BuildingType, Integer>
+            for (Map<BuildingType, Integer> mapInListOfPlayer : entry.getValue()) {
                 for (Map.Entry<BuildingType, Integer> map2 : mapInListOfPlayer.entrySet()) {
                     if (playersWithMostOfType.containsKey(map2.getKey()) && biggestValues.containsKey(map2.getKey())) {
                         if (map2.getValue() > biggestValues.get(map2.getKey())) {
@@ -71,9 +71,9 @@ public class Computations {
             if (mapOfPlayerWithMost.getKey() != null){
                 BuildingType type = mapOfPlayerWithMost.getKey();
 
-                Player bestPlayer = null;
-                Player secondBestPlayer = null;
-                Player thirdBestPlayer = null;
+                Player bestPlayer = new Player("test");
+                Player secondBestPlayer = new Player("test");
+                Player thirdBestPlayer = new Player("test");
 
                 if (mapOfPlayerWithMost.getValue().size() == 1){
                     bestPlayer = mapOfPlayerWithMost.getValue().get(0);
@@ -91,23 +91,13 @@ public class Computations {
                 int thirdScore = pointsPerBuildingType.get(type).get(2);
 
                 if (round > 2) {
-                    assert bestPlayer != null;
                     bestPlayer.setVirtualScore(bestScore);
-                    assert secondBestPlayer != null;
                     secondBestPlayer.setVirtualScore(secondScore);
-                    assert thirdBestPlayer != null;
                     thirdBestPlayer.setVirtualScore(thirdScore);
-                }
-
-                if (round == 2) {
-                    assert bestPlayer != null;
+                } else if (round == 2) {
                     bestPlayer.setVirtualScore(bestScore);
-                    assert secondBestPlayer != null;
                     secondBestPlayer.setVirtualScore(secondScore);
-                }
-
-                if (round == 1){
-                    assert bestPlayer != null;
+                } else if (round == 1){
                     bestPlayer.setVirtualScore(bestScore);
                 }
 
@@ -116,14 +106,10 @@ public class Computations {
                         bestPlayer.setScore(bestScore);
                         secondBestPlayer.setScore(secondScore);
                         thirdBestPlayer.setScore(thirdScore);
-                    }
-
-                    if (round == 2) {
+                    } else if (round == 2) {
                         bestPlayer.setScore(bestScore);
                         secondBestPlayer.setScore(secondScore);
-                    }
-
-                    if (round == 1){
+                    } else if (round == 1){
                         bestPlayer.setScore(bestScore);
                     }
                 }
