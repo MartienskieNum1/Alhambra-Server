@@ -318,6 +318,13 @@ public class Game {
     }
 
     public int getRemainingBuildings(){
+        if (remainingBuildings.isEmpty()){
+            new Computations(3, this, "score");
+        }
         return remainingBuildings.size();
+    }
+
+    public void setEnded(Boolean ended) {
+        this.ended = ended;
     }
 }
