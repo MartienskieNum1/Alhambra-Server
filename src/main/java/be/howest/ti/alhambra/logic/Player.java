@@ -166,13 +166,7 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return score == player.score &&
-                virtualScore == player.virtualScore &&
-                ready == player.ready &&
-                Objects.equals(username, player.username) &&
-                Objects.equals(coins, player.coins) &&
-                Objects.equals(reserve, player.reserve) &&
-                Objects.equals(buildingsInHand, player.buildingsInHand) &&
+        return Objects.equals(username, player.username) &&
                 Objects.equals(city, player.city);
     }
 
