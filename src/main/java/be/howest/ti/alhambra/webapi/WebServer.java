@@ -34,7 +34,7 @@ public class WebServer extends AbstractVerticle {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebServer.class);
 
     private static final int PORT_FALLBACK = 8080;
-    private static final String OPEN_API3_FILE_FALLBACK = "http://172.21.22.52:48201/alhambra-api-spec/alhambra-spec.yaml";
+    private static final String OPEN_API3_FILE_FALLBACK = "src/main/resources/alhambra-spec.yaml";
 
     public static final String AUTHORIZATION_TOKEN_PREFIX = "Bearer ";
 
